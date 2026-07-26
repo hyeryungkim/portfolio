@@ -64,8 +64,8 @@
             opacity: 1;
         }
 
-        /* 🔍 세련된 SVG 돋보기 아이콘 전용 스타일 */
-        .zoom-icon {
+        /* 🔍 세련된 SVG 아이콘 공통 전용 스타일 */
+        .svg-icon {
             width: 24px;
             height: 24px;
             fill: none;
@@ -75,19 +75,20 @@
             stroke-linejoin: round;
         }
 
-        /* ◀ ▶ 항상 선명하게 보이는 고정형 이동 화살표 버튼 */
+        /* ◀ ▶ 세련된 동그라미 고정형 이동 화살표 버튼 */
         .nav-btn {
             position: absolute !important;
             top: 50% !important;
             transform: translateY(-50%) !important;
-            color: #ffffff !important;
-            font-size: 60px !important;
-            font-weight: bold !important;
             cursor: pointer !important;
-            padding: 15px 25px !important;
-            opacity: 0.8 !important;
-            z-index: 1000001 !important;
-            background-color: rgba(255, 255, 255, 0.1) !important;
+            width: 60px !important;            /* 👈 화살표 상자 크기 고정 */
+            height: 60px !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            opacity: 0.7 !important;           /* 👈 선명하게 기본 배치 */
+            z-index: 1000001 !important;       /* 👈 이미지 위로 강제 배치 */
+            background-color: rgba(255, 255, 255, 0.1) !important; /* 은은한 흰색 동그라미 배경 */
             border-radius: 50% !important;
             transition: all 0.2s ease;
         }
@@ -97,6 +98,17 @@
         }
         .prev-btn { left: 40px !important; }
         .next-btn { right: 40px !important; }
+
+        /* 화살표 모양 굵기 및 크기 조절 */
+        .nav-icon {
+            width: 28px;
+            height: 28px;
+            stroke: #ffffff;
+            stroke-width: 2;
+            fill: none;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
     </style>
 </head>
 <body>
@@ -116,10 +128,10 @@
 
 <!-- 🖤 완벽하게 조종되는 팝업창 및 버튼 영역 -->
 <div id="custom-lightbox" class="custom-lightbox">
-    <!-- 상단 우측 버튼들 (세련된 벡터 그래픽 돋보기로 변경 완료) -->
+    <!-- 상단 우측 버튼들 (돋보기, 닫기) -->
     <div class="lightbox-toolbar">
         <span class="toolbar-btn" onclick="toggleZoom(event)" id="zoom-btn" title="확대/축소">
-            <svg class="zoom-icon" viewBox="0 0 24 24">
+            <svg class="svg-icon" viewBox="0 0 24 24">
                 <circle cx="11" cy="11" r="8"></circle>
                 <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
             </svg>
@@ -127,9 +139,19 @@
         <span class="toolbar-btn" onclick="closeLightbox()" title="닫기">&times;</span>
     </div>
 
-    <!-- 좌우 이동 화살표 -->
-    <span class="nav-btn prev-btn" onclick="changeImage(-1, event)">&#10094;</span>
-    <span class="nav-btn next-btn" onclick="changeImage(1, event)">&#10095;</span>
+    <!-- ◀ 왼쪽 화살표 버튼 (SVG 고해상도 디자인으로 변경 완료) -->
+    <span class="nav-btn prev-btn" onclick="changeImage(-1, event)">
+        <svg class="nav-icon" viewBox="0 0 24 24">
+            <polyline points="15 18 9 12 15 6"></polyline>
+        </svg>
+    </span>
+
+    <!-- ▶ 오른쪽 화살표 버튼 (SVG 고해상도 디자인으로 변경 완료) -->
+    <span class="nav-btn next-btn" onclick="changeImage(1, event)">
+        <svg class="nav-icon" viewBox="0 0 24 24">
+            <polyline points="9 18 15 12 9 6"></polyline>
+        </svg>
+    </span>
 
     <!-- 큰 사진 몸체 -->
     <div id="lightbox-wrapper" class="lightbox-wrapper">

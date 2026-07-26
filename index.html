@@ -6,6 +6,65 @@
     <title>Hyeryung Kim | Portfolio</title>
     <link rel="stylesheet" href="style.css">
     <style>
+        /* 첫 화면 사진 목록 정렬 */
+        .gallery {
+            display: grid !important;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)) !important;
+            gap: 40px !important; /* 글씨 공간을 위해 간격을 조금 넓힘 */
+            max-width: 1200px !important;
+            margin: 0 auto !important;
+            padding: 20px 0 !important;
+        }
+
+        /* 개별 사진+텍스트 카드 세트 */
+        .gallery-container {
+            display: flex !important;
+            flex-direction: column !important;
+            align-items: center !important;
+            text-align: center !important;
+        }
+
+        .gallery-item {
+            cursor: pointer !important;
+            width: 280px !important;
+            height: 280px !important;
+            overflow: hidden !important;
+            border-radius: 4px !important;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06) !important;
+            transition: transform 0.2s ease;
+            margin-bottom: 15px !important; /* 사진과 글씨 사이 간격 */
+        }
+
+        .gallery-item:hover {
+            transform: translateY(-4px) !important;
+        }
+
+        .gallery-item img {
+            width: 100% !important;
+            height: 100% !important;
+            object-fit: cover !important;
+            display: block !important;
+        }
+
+        /* ✍️ [요청 반영] 사진 밑 제목 (얇은 두께, 색상, 가운데 정렬, 아담한 크기) */
+        .item-title {
+            font-size: 14px !important;
+            font-weight: 300 !important;
+            color: #4a4949 !important;
+            margin: 0 0 6px 0 !important;
+            letter-spacing: 0.5px !important;
+        }
+
+        /* ✍️ [요청 반영] 사진 밑 설명글 (회색빛 색상, 가운데 정렬, 더 아담한 크기) */
+        .item-desc {
+            font-size: 11px !important;
+            font-weight: 300 !important;
+            color: #777777 !important;
+            line-height: 1.5 !important;
+            margin: 0 !important;
+            white-space: pre-line !important; /* 줄바꿈 적용 */
+        }
+
         /* 🖤 완벽 차단용 검은색 팝업창 레이아웃 */
         .custom-lightbox {
             display: none;
@@ -60,19 +119,12 @@
             align-items: center;
             justify-content: center;
         }
-        .toolbar-btn:hover {
-            opacity: 1;
-        }
+        .toolbar-btn:hover { opacity: 1 !important; }
 
-        /* 🔍 세련된 SVG 아이콘 전용 스타일 */
         .svg-icon {
-            width: 24px;
-            height: 24px;
-            fill: none;
-            stroke: #ffffff;
-            stroke-width: 2;
-            stroke-linecap: round;
-            stroke-linejoin: round;
+            width: 24px; height: 24px;
+            fill: none; stroke: #ffffff; stroke-width: 2;
+            stroke-linecap: round; stroke-linejoin: round;
         }
 
         /* ◀ ▶ 동그라미 없는 날렵한 화살표 */
@@ -97,31 +149,16 @@
         .next-btn { right: 30px !important; }
 
         .nav-icon {
-            width: 40px;
-            height: 40px;
-            stroke: #ffffff;
-            stroke-width: 1.5;
-            fill: none;
-            stroke-linecap: round;
-            stroke-linejoin: round;
-        }
-
-        /* 로딩 메시지 스타일 */
-        .loader {
-            color: #4a4949;
-            font-size: 14px;
-            text-align: center;
-            margin-top: 50px;
-            font-weight: 300;
+            width: 40px; height: 40px;
+            stroke: #ffffff; stroke-width: 1.5; fill: none;
+            stroke-linecap: round; stroke-linejoin: round;
         }
     </style>
 </head>
 <body>
 
-<!-- 🖼 *진짜 자동화* 사진이 스스로 렌더링될 바둑판 영역 -->
-<div id="gallery" class="gallery">
-    <div id="gallery-loader" class="loader">작품 목록을 불러오는 중입니다...</div>
-</div>
+<!-- 🖼️ 자바스크립트가 알아서 채워줄 갤러리 영역 -->
+<div id="gallery" class="gallery"></div>
 
 <!-- 🖤 팝업창 및 버튼 영역 -->
 <div id="custom-lightbox" class="custom-lightbox">
@@ -152,34 +189,45 @@
     </div>
 </div>
 
-<!-- ⚙️ 자동화 시스템 스크립트 결합 -->
+<!-- ⚙️ 동적 생성 스크립트 -->
 <script src="script.js"></script>
 <script>
     let currentIndex = 0;
     let isZoomed = false;
 
-    // 📁 script.js에 수집된 실제 이미지 주소들을 화면에 바둑판으로 렌더링
     function initGallery() {
         const galleryContainer = document.getElementById('gallery');
-        const loader = document.getElementById('gallery-loader');
-        if (loader) loader.remove();
+        galleryContainer.innerHTML = '';
 
-        if (!images || images.length === 0) {
-            galleryContainer.innerHTML = '<div class="loader">images 폴더에 등록된 사진이 없습니다.</div>';
-            return;
-        }
+        // script.js의 데이터를 바탕으로 사진 상자 + 텍스트 상자 세트를 자동 조립
+        galleryData.forEach((item, index) => {
+            const containerDiv = document.createElement('div');
+            containerDiv.className = 'gallery-container';
 
-        images.forEach((src, index) => {
             const itemDiv = document.createElement('div');
             itemDiv.className = 'gallery-item';
             itemDiv.setAttribute('onclick', `openLightbox(${index})`);
             
             const imgTag = document.createElement('img');
-            imgTag.src = src;
-            imgTag.alt = `작품 ${index + 1}`;
+            imgTag.src = item.src;
+            imgTag.alt = item.title;
             
             itemDiv.appendChild(imgTag);
-            galleryContainer.appendChild(itemDiv);
+            containerDiv.appendChild(itemDiv);
+
+            // 제목 추가
+            const titleH3 = document.createElement('h3');
+            titleH3.className = 'item-title';
+            titleH3.innerText = item.title;
+            containerDiv.appendChild(titleH3);
+
+            // 설명글 추가
+            const descP = document.createElement('p');
+            descP.className = 'item-desc';
+            descP.innerText = item.desc;
+            containerDiv.appendChild(descP);
+
+            galleryContainer.appendChild(containerDiv);
         });
     }
 
@@ -198,7 +246,7 @@
 
     function updateLightbox() {
         const wrapper = document.getElementById('lightbox-wrapper');
-        document.getElementById('custom-lightbox-img').src = images[currentIndex];
+        document.getElementById('custom-lightbox-img').src = galleryData[currentIndex].src;
         wrapper.style.transform = 'scale(1)';
         isZoomed = false;
     }
@@ -206,9 +254,8 @@
     function changeImage(direction, event) {
         if (event) event.stopPropagation();
         currentIndex += direction;
-        if (currentIndex >= images.length) currentIndex = 0; 
-        if (currentIndex < 0) images.length - 1; 
-        if (images.length > 0 && currentIndex < 0) currentIndex = images.length - 1;
+        if (currentIndex >= galleryData.length) currentIndex = 0; 
+        if (currentIndex < 0) currentIndex = galleryData.length - 1; 
         updateLightbox();
     }
 
@@ -241,13 +288,7 @@
         }
     });
 
-    // 🚀 데이터 로드가 끝나면 화면 구성 시작
-    if (typeof imagesReady !== 'undefined') {
-        initGallery();
-    } else {
-        document.addEventListener('ImagesLoaded', initGallery);
-    }
+    initGallery();
 </script>
 
 </body>
-</html>

@@ -293,3 +293,7 @@
     });
 
     document.getElementById('custom-lightbox').addEventListener('click', function(e) {
+        if (e.target === this || e.target === document.getElementById('lightbox-wrapper')) {closeLightbox();}});initGallery();
+     }
+    });
+

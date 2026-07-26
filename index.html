@@ -105,12 +105,23 @@
             stroke-linecap: round;
             stroke-linejoin: round;
         }
+
+        /* 로딩 메시지 스타일 */
+        .loader {
+            color: #4a4949;
+            font-size: 14px;
+            text-align: center;
+            margin-top: 50px;
+            font-weight: 300;
+        }
     </style>
 </head>
 <body>
 
-<!-- 🖼️ 첫 화면 가로 바둑판 사진 목록 영역 -->
-<div id="gallery" class="gallery"></div>
+<!-- 🖼 *진짜 자동화* 사진이 스스로 렌더링될 바둑판 영역 -->
+<div id="gallery" class="gallery">
+    <div id="gallery-loader" class="loader">작품 목록을 불러오는 중입니다...</div>
+</div>
 
 <!-- 🖤 팝업창 및 버튼 영역 -->
 <div id="custom-lightbox" class="custom-lightbox">
@@ -141,17 +152,20 @@
     </div>
 </div>
 
-<!-- ⚙️ script.js 파일을 먼저 읽고 갤러리 실행 -->
+<!-- ⚙️ 자동화 시스템 스크립트 결합 -->
 <script src="script.js"></script>
 <script>
     let currentIndex = 0;
     let isZoomed = false;
 
-    // script.js에 적힌 사진 이름 목록을 읽어서 화면에 바둑판 그리기
+    // 📁 script.js에 수집된 실제 이미지 주소들을 화면에 바둑판으로 렌더링
     function initGallery() {
         const galleryContainer = document.getElementById('gallery');
+        const loader = document.getElementById('gallery-loader');
+        if (loader) loader.remove();
+
         if (!images || images.length === 0) {
-            galleryContainer.innerHTML = '<div style="color:#aaa; text-align:center; margin-top:50px;">등록된 사진이 없습니다.</div>';
+            galleryContainer.innerHTML = '<div class="loader">images 폴더에 등록된 사진이 없습니다.</div>';
             return;
         }
 
@@ -193,7 +207,8 @@
         if (event) event.stopPropagation();
         currentIndex += direction;
         if (currentIndex >= images.length) currentIndex = 0; 
-        if (currentIndex < 0) currentIndex = images.length - 1; 
+        if (currentIndex < 0) images.length - 1; 
+        if (images.length > 0 && currentIndex < 0) currentIndex = images.length - 1;
         updateLightbox();
     }
 
@@ -226,8 +241,12 @@
         }
     });
 
-    // 실행
-    initGallery();
+    // 🚀 데이터 로드가 끝나면 화면 구성 시작
+    if (typeof imagesReady !== 'undefined') {
+        initGallery();
+    } else {
+        document.addEventListener('ImagesLoaded', initGallery);
+    }
 </script>
 
 </body>

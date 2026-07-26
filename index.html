@@ -75,55 +75,57 @@
             stroke-linejoin: round;
         }
 
-        /* ◀ ▶ 세련된 동그라미 고정형 이동 화살표 버튼 */
+        /* ◀ ▶ [🔥 수정] 동그라미 배경을 없애고 화살표만 남긴 세련된 내비게이션 버튼 */
         .nav-btn {
             position: absolute !important;
             top: 50% !important;
             transform: translateY(-50%) !important;
             cursor: pointer !important;
-            width: 60px !important;            /* 👈 화살표 상자 크기 고정 */
-            height: 60px !important;
+            width: 50px !important;
+            height: 80px !important;
             display: flex !important;
             align-items: center !important;
             justify-content: center !important;
-            opacity: 0.7 !important;           /* 👈 선명하게 기본 배치 */
-            z-index: 1000001 !important;       /* 👈 이미지 위로 강제 배치 */
-            background-color: rgba(255, 255, 255, 0.1) !important; /* 은은한 흰색 동그라미 배경 */
-            border-radius: 50% !important;
-            transition: all 0.2s ease;
+            opacity: 0.4 !important;           /* 👈 평소에는 투명도를 줘서 사진을 방해하지 않음 */
+            z-index: 1000001 !important;       
+            background-color: transparent !important; /* 👈 흰색 동그라미 배경 완벽히 삭제 */
+            border: none !important;
+            transition: opacity 0.2s ease !important;
         }
+        
+        /* 마우스를 화살표 근처에 올리면 환하게 빛나는 효과 */
         .nav-btn:hover {
-            opacity: 1 !important;
-            background-color: rgba(255, 255, 255, 0.25) !important;
+            opacity: 1 !important; 
         }
-        .prev-btn { left: 40px !important; }
-        .next-btn { right: 40px !important; }
+        .prev-btn { left: 30px !important; }
+        .next-btn { right: 30px !important; }
 
-        /* 화살표 모양 굵기 및 크기 조절 */
+        /* 화살표 모양 크기 및 선 두께 (조금 더 은은하고 날렵하게 조정) */
         .nav-icon {
-            width: 28px;
-            height: 28px;
+            width: 40px;                       /* 👈 화살표 크기를 시원하게 키움 */
+            height: 40px;
             stroke: #ffffff;
-            stroke-width: 2;
+            stroke-width: 1.5;                 /* 👈 선 굵기를 1.5로 슬림하게 변경 */
             fill: none;
             stroke-linecap: round;
             stroke-linejoin: round;
+        }
+        
+        /* 로딩 애니메이션 스타일 */
+        .loader {
+            color: #4a4949;
+            font-size: 14px;
+            text-align: center;
+            margin-top: 50px;
+            font-weight: 300;
         }
     </style>
 </head>
 <body>
 
 <!-- 🖼️ 첫 화면 가로 바둑판 사진 목록 -->
-<div class="gallery">
-    <div class="gallery-item" onclick="openLightbox(0)">
-        <img src="images/001.jpg" alt="작품 1">
-    </div>
-    <div class="gallery-item" onclick="openLightbox(1)">
-        <img src="images/002.jpg" alt="작품 2">
-    </div>
-    <div class="gallery-item" onclick="openLightbox(2)">
-        <img src="images/003.jpg" alt="작품 3">
-    </div>
+<div id="gallery" class="gallery">
+    <div id="gallery-loader" class="loader">작품 목록을 불러오는 중입니다...</div>
 </div>
 
 <!-- 🖤 완벽하게 조종되는 팝업창 및 버튼 영역 -->
@@ -139,14 +141,14 @@
         <span class="toolbar-btn" onclick="closeLightbox()" title="닫기">&times;</span>
     </div>
 
-    <!-- ◀ 왼쪽 화살표 버튼 (SVG 고해상도 디자인으로 변경 완료) -->
+    <!-- ◀ 왼쪽 화살표 버튼 (동그라미 제거 완료) -->
     <span class="nav-btn prev-btn" onclick="changeImage(-1, event)">
         <svg class="nav-icon" viewBox="0 0 24 24">
             <polyline points="15 18 9 12 15 6"></polyline>
         </svg>
     </span>
 
-    <!-- ▶ 오른쪽 화살표 버튼 (SVG 고해상도 디자인으로 변경 완료) -->
+    <!-- ▶ 오른쪽 화살표 버튼 (동그라미 제거 완료) -->
     <span class="nav-btn next-btn" onclick="changeImage(1, event)">
         <svg class="nav-icon" viewBox="0 0 24 24">
             <polyline points="9 18 15 12 9 6"></polyline>
@@ -159,11 +161,60 @@
     </div>
 </div>
 
-<!-- 화살표 이동 및 돋보기 무오류 순수 스크립트 -->
+<!-- ⚙️ 폴더 감지 완전 자동화 자바스크립트 시스템 -->
 <script>
-    const images = ['images/001.jpg', 'images/002.jpg', 'images/003.jpg'];
+    const GITHUB_USER = 'hyeryungkim'; 
+    const GITHUB_REPO = 'portfolio';     
+
+    let images = [];
     let currentIndex = 0;
     let isZoomed = false;
+
+    async function loadGalleryAutomatically() {
+        const galleryContainer = document.getElementById('gallery');
+        const apiURL = `https://github.com{GITHUB_USER}/${GITHUB_REPO}/contents/images`;
+
+        try {
+            const response = await fetch(apiURL);
+            if (!response.ok) throw new Error('폴더를 찾을 수 없습니다.');
+            const files = await response.json();
+            
+            const imageExtensions = ['jpg', 'jpeg', 'png', 'gif', 'webp', 'JPG', 'JPEG', 'PNG'];
+            const sortedFiles = files
+                .filter(file => {
+                    const ext = file.name.split('.').pop();
+                    return imageExtensions.includes(ext) && file.name !== '.gitkeep';
+                })
+                .sort((a, b) => a.name.localeCompare(b.name, undefined, {numeric: true, sensitivity: 'base'}));
+
+            const loader = document.getElementById('gallery-loader');
+            if (loader) loader.remove();
+
+            if (sortedFiles.length === 0) {
+                galleryContainer.innerHTML = '<div class="loader">images 폴더에 등록된 사진이 없습니다.</div>';
+                return;
+            }
+
+            sortedFiles.forEach((file, index) => {
+                images.push(file.path); 
+
+                const itemDiv = document.createElement('div');
+                itemDiv.className = 'gallery-item';
+                itemDiv.setAttribute('onclick', `openLightbox(${index})`);
+                
+                const imgTag = document.createElement('img');
+                imgTag.src = file.path;
+                imgTag.alt = `작품 ${index + 1}`;
+                
+                itemDiv.appendChild(imgTag);
+                galleryContainer.appendChild(itemDiv);
+            });
+
+        } catch (error) {
+            console.error(error);
+            document.getElementById('gallery').innerHTML = '<div class="loader">갤러리를 불러오는 중 오류가 발생했습니다.</div>';
+        }
+    }
 
     function openLightbox(index) {
         currentIndex = index;
@@ -186,7 +237,7 @@
     }
 
     function changeImage(direction, event) {
-        event.stopPropagation();
+        if (event) event.stopPropagation();
         currentIndex += direction;
         if (currentIndex >= images.length) currentIndex = 0; 
         if (currentIndex < 0) currentIndex = images.length - 1; 
@@ -194,7 +245,7 @@
     }
 
     function toggleZoom(event) {
-        event.stopPropagation();
+        if (event) event.stopPropagation();
         const wrapper = document.getElementById('lightbox-wrapper');
         const lightbox = document.getElementById('custom-lightbox');
         if (!isZoomed) {
@@ -210,16 +261,8 @@
 
     document.addEventListener('keydown', function(e) {
         if (document.getElementById('custom-lightbox').style.display === 'flex') {
-            if (e.key === 'ArrowRight') {
-                currentIndex += 1;
-                if (currentIndex >= images.length) currentIndex = 0;
-                updateLightbox();
-            }
-            if (e.key === 'ArrowLeft') {
-                currentIndex -= 1;
-                if (currentIndex < 0) currentIndex = images.length - 1;
-                updateLightbox();
-            }
+            if (e.key === 'ArrowRight') changeImage(1);
+            if (e.key === 'ArrowLeft') changeImage(-1);
             if (e.key === 'Escape') closeLightbox();
         }
     });
@@ -229,6 +272,9 @@
             closeLightbox();
         }
     });
+
+    window.onload = loadGalleryAutomatically;
 </script>
 
 </body>
+</html>

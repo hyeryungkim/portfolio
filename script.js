@@ -7,21 +7,21 @@ const galleryData = [
     {
         src: 'images/001.jpg',
         title: 'AZIT _ Deep Deep Deep 1',
-        desc: '25 x 25 cm Porcelain, mixed media on woodpanel'
+        desc: '25 x 25 cm\nPorcelain, mixed media on wood panel'
     },
     {
         src: 'images/002.jpg',
         title: 'AZIT _ Deep Deep Deep 2',
-        desc: '25 x 25 cm Porcelain, mixed media on woodpanel'
+        desc: '25 x 25 cm\nPorcelain, mixed media on wood panel'
     },
     {
         src: 'images/003.jpg',
         title: 'AZIT _ Deep Deep Deep 3',
-        desc: '25 x 25 cm Porcelain, mixed media on woodpanel'
+        desc: '25 x 25 cm\nPorcelain, mixed media on wood panel'
     },
     {
         src: 'images/004.jpg',
         title: 'AZIT _ Deep Deep Deep 4',
-        desc: '25 x 25 cm Porcelain, mixed media on woodpanel'
+        desc: '25 x 25 cm\nPorcelain, mixed media on wood panel'
     }
 ];

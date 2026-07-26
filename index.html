@@ -4,12 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Hyeryung Kim | Portfolio</title>
-    
-    <!-- 🌐 전 세계 모든 사람에게 Noto Serif Oriya 폰트를 강제 호출하는 안전 연결 코드 -->
-    <link rel="preconnect" href="https://googleapis.com">
-    <link rel="preconnect" href="https://gstatic.com" crossorigin>
-    <link href="https://googleapis.com/css2?family=Noto+Serif+Oriya:wght@300;400;700&display=swap" rel="stylesheet">
-    
     <link rel="stylesheet" href="style.css">
     <style>
         /* 첫 화면 사진 목록 정렬 */
@@ -52,25 +46,26 @@
             display: block !important;
         }
 
-        /* ✍️ 사진 밑 제목 (세련된 Noto Serif Oriya 글꼴 고정) */
+        /* ✍️ 사진 밑 제목 (오류 없는 고급 내장 명조체 시스템 고정) */
         .item-title {
             font-size: 14px !important;
-            font-weight: 500 !important;
+            font-weight: 400 !important;
             color: #4a4949 !important;
             margin: 0 0 6px 0 !important;
             letter-spacing: 0.5px !important;
-            font-family: "Noto Serif Oriya", serif !important;
+            /* 전세계 PC/맥북에 기본 내장되어 다운로드 멈춤 에러가 없는 최고급 세리프 서체 배열 */
+            font-family: "Times New Roman", "Georgia", "Garamond", serif !important;
         }
 
-        /* ✍️ 사진 밑 설명글 (세련된 Noto Serif Oriya 글꼴 고정) */
+        /* ✍️ 사진 밑 설명글 */
         .item-desc {
             font-size: 11px !important;
-            font-weight: 400 !important;
+            font-weight: 300 !important;
             color: #777777 !important;
             line-height: 1.5 !important;
             margin: 0 !important;
             white-space: pre-line !important;
-            font-family: "Noto Serif Oriya", serif !important;
+            font-family: "Times New Roman", "Georgia", "Garamond", serif !important;
         }
 
         /* 🖤 완벽 차단용 검은색 팝업창 레이아웃 */
@@ -292,4 +287,14 @@
         }
     });
 
-    /* 👈 질문자님이 보셨던 마지막 부분이 아래처럼 안전하게 다 닫혀야 정상입니다! */
+    document.getElementById('custom-lightbox').addEventListener('click', function(e) {
+        if (e.target === this || e.target === document.getElementById('lightbox-wrapper')) {
+            closeLightbox();
+        }
+    });
+
+    initGallery();
+</script>
+
+</body>
+</html>

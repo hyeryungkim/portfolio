@@ -75,7 +75,7 @@
             stroke-linejoin: round;
         }
 
-        /* ◀ ▶ [🔥 수정] 동그라미 배경을 없애고 화살표만 남긴 세련된 내비게이션 버튼 */
+        /* ◀ ▶ 동그라미 없는 날렵한 화살표 */
         .nav-btn {
             position: absolute !important;
             top: 50% !important;
@@ -86,51 +86,34 @@
             display: flex !important;
             align-items: center !important;
             justify-content: center !important;
-            opacity: 0.4 !important;           /* 👈 평소에는 투명도를 줘서 사진을 방해하지 않음 */
-            z-index: 1000001 !important;       
-            background-color: transparent !important; /* 👈 흰색 동그라미 배경 완벽히 삭제 */
+            opacity: 0.4 !important;
+            z-index: 1000001 !important;
+            background-color: transparent !important;
             border: none !important;
             transition: opacity 0.2s ease !important;
         }
-        
-        /* 마우스를 화살표 근처에 올리면 환하게 빛나는 효과 */
-        .nav-btn:hover {
-            opacity: 1 !important; 
-        }
+        .nav-btn:hover { opacity: 1 !important; }
         .prev-btn { left: 30px !important; }
         .next-btn { right: 30px !important; }
 
-        /* 화살표 모양 크기 및 선 두께 (조금 더 은은하고 날렵하게 조정) */
         .nav-icon {
-            width: 40px;                       /* 👈 화살표 크기를 시원하게 키움 */
+            width: 40px;
             height: 40px;
             stroke: #ffffff;
-            stroke-width: 1.5;                 /* 👈 선 굵기를 1.5로 슬림하게 변경 */
+            stroke-width: 1.5;
             fill: none;
             stroke-linecap: round;
             stroke-linejoin: round;
-        }
-        
-        /* 로딩 애니메이션 스타일 */
-        .loader {
-            color: #4a4949;
-            font-size: 14px;
-            text-align: center;
-            margin-top: 50px;
-            font-weight: 300;
         }
     </style>
 </head>
 <body>
 
-<!-- 🖼️ 첫 화면 가로 바둑판 사진 목록 -->
-<div id="gallery" class="gallery">
-    <div id="gallery-loader" class="loader">작품 목록을 불러오는 중입니다...</div>
-</div>
+<!-- 🖼️ 자바스크립트가 안전하게 동적 생성하는 갤러리 영역 -->
+<div id="gallery" class="gallery"></div>
 
-<!-- 🖤 완벽하게 조종되는 팝업창 및 버튼 영역 -->
+<!-- 🖤 팝업창 및 버튼 영역 -->
 <div id="custom-lightbox" class="custom-lightbox">
-    <!-- 상단 우측 버튼들 (돋보기, 닫기) -->
     <div class="lightbox-toolbar">
         <span class="toolbar-btn" onclick="toggleZoom(event)" id="zoom-btn" title="확대/축소">
             <svg class="svg-icon" viewBox="0 0 24 24">
@@ -141,79 +124,46 @@
         <span class="toolbar-btn" onclick="closeLightbox()" title="닫기">&times;</span>
     </div>
 
-    <!-- ◀ 왼쪽 화살표 버튼 (동그라미 제거 완료) -->
     <span class="nav-btn prev-btn" onclick="changeImage(-1, event)">
         <svg class="nav-icon" viewBox="0 0 24 24">
             <polyline points="15 18 9 12 15 6"></polyline>
         </svg>
     </span>
 
-    <!-- ▶ 오른쪽 화살표 버튼 (동그라미 제거 완료) -->
     <span class="nav-btn next-btn" onclick="changeImage(1, event)">
         <svg class="nav-icon" viewBox="0 0 24 24">
             <polyline points="9 18 15 12 9 6"></polyline>
         </svg>
     </span>
 
-    <!-- 큰 사진 몸체 -->
     <div id="lightbox-wrapper" class="lightbox-wrapper">
         <img id="custom-lightbox-img" src="" alt="확대 사진" onclick="event.stopPropagation();">
     </div>
 </div>
 
-<!-- ⚙️ 폴더 감지 완전 자동화 자바스크립트 시스템 -->
+<!-- ⚙️ 안전한 내부 데이터 연동 및 무오류 스크립트 실행 -->
+<script src="script.js"></script>
 <script>
-    const GITHUB_USER = 'hyeryungkim'; 
-    const GITHUB_REPO = 'portfolio';     
-
-    let images = [];
     let currentIndex = 0;
     let isZoomed = false;
 
-    async function loadGalleryAutomatically() {
+    // 안전하게 첫 화면 바둑판 리스트 그리기
+    function initGallery() {
         const galleryContainer = document.getElementById('gallery');
-        const apiURL = `https://github.com{GITHUB_USER}/${GITHUB_REPO}/contents/images`;
+        galleryContainer.innerHTML = ''; // 초기화
 
-        try {
-            const response = await fetch(apiURL);
-            if (!response.ok) throw new Error('폴더를 찾을 수 없습니다.');
-            const files = await response.json();
+        images.forEach((src, index) => {
+            const itemDiv = document.createElement('div');
+            itemDiv.className = 'gallery-item';
+            itemDiv.setAttribute('onclick', `openLightbox(${index})`);
             
-            const imageExtensions = ['jpg', 'jpeg', 'png', 'gif', 'webp', 'JPG', 'JPEG', 'PNG'];
-            const sortedFiles = files
-                .filter(file => {
-                    const ext = file.name.split('.').pop();
-                    return imageExtensions.includes(ext) && file.name !== '.gitkeep';
-                })
-                .sort((a, b) => a.name.localeCompare(b.name, undefined, {numeric: true, sensitivity: 'base'}));
-
-            const loader = document.getElementById('gallery-loader');
-            if (loader) loader.remove();
-
-            if (sortedFiles.length === 0) {
-                galleryContainer.innerHTML = '<div class="loader">images 폴더에 등록된 사진이 없습니다.</div>';
-                return;
-            }
-
-            sortedFiles.forEach((file, index) => {
-                images.push(file.path); 
-
-                const itemDiv = document.createElement('div');
-                itemDiv.className = 'gallery-item';
-                itemDiv.setAttribute('onclick', `openLightbox(${index})`);
-                
-                const imgTag = document.createElement('img');
-                imgTag.src = file.path;
-                imgTag.alt = `작품 ${index + 1}`;
-                
-                itemDiv.appendChild(imgTag);
-                galleryContainer.appendChild(itemDiv);
-            });
-
-        } catch (error) {
-            console.error(error);
-            document.getElementById('gallery').innerHTML = '<div class="loader">갤러리를 불러오는 중 오류가 발생했습니다.</div>';
-        }
+            const imgTag = document.createElement('img');
+            imgTag.src = src;
+            imgTag.alt = `작품 ${index + 1}`;
+            
+            itemDiv.appendChild(imgTag);
+            galleryContainer.appendChild(itemDiv);
+        });
     }
 
     function openLightbox(index) {
@@ -273,7 +223,8 @@
         }
     });
 
-    window.onload = loadGalleryAutomatically;
+    // 실행
+    initGallery();
 </script>
 
 </body>

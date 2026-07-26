@@ -1,45 +1,72 @@
-<!DOCTYPE html>
-<html lang="ko">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+css/* 1. 전체 기본 세팅 */
+body {
+    margin: 0;
+    padding: 50px 30px;
+    background-color: #ffffff;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    color: #222222;
+}
 
-    <title>Hyeryung Kim | Works</title>
+/* 2. 상단 WORK 타이틀 스타일 */
+.title {
+    font-size: 26px;
+    font-weight: 300;
+    letter-spacing: 3px;
+    text-align: center;
+    margin-bottom: 50px;
+}
 
-    <link rel="stylesheet" href="style.css">
+/* 3. 메인 화면 사진 목록 바둑판 정렬 (Grid) */
+.gallery {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 25px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
 
-    <!-- LightGallery -->
-    <link rel="stylesheet"
-          href="https://cdn.jsdelivr.net/npm/lightgallery@2.8.1/css/lightgallery-bundle.min.css">
-</head>
+/* 4. 각각의 사진 카드 박스 설정 */
+.gallery a {
+    display: block;
+    overflow: hidden;
+    border-radius: 4px;
+    background-color: #fcfcfc;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    transition: transform 0.3s ease;
+}
 
-<body>
+.gallery a:hover {
+    transform: translateY(-5px); /* 마우스 올리면 살짝 위로 정중앙 이동 */
+}
 
-<h1 class="title">WORK</h1>
+/* 첫 화면에 보이는 섬네일 이미지 크기 고정 */
+.gallery img {
+    width: 100%;
+    height: 280px;
+    object-fit: cover; /* 비율 유지하며 꽉 차게 */
+    display: block;
+}
 
-<div id="gallery" class="gallery">
+/* ======================================================= */
+/* 5. [🔥 핵심 해결] 클릭 시 확대되는 팝업창 모니터 한눈에 보기 설정 */
+/* ======================================================= */
 
-    <a href="images/001.jpg">
-        <img src="images/001.jpg" alt="">
-    </a>
+/* 팝업창 뒷배경을 완벽한 블랙으로 고정 */
+.lg-backdrop {
+    background-color: #000000 !important;
+}
 
-    <a href="images/002.jpg">
-        <img src="images/002.jpg" alt="">
-    </a>
+/* [최종 교정] 확대 사진 크기를 모니터 화면의 세로 65% 이하로 강제 제한 */
+/* 이 코드가 style.css에 명확히 들어가야 lightGallery의 웁스 오류와 스크롤이 해결됩니다 */
+.lg-object.lg-image {
+    max-width: 85vw !important;
+    max-height: 65vh !important; /* 세로를 화면의 65%로 줄여 스크롤바 원천 차단 */
+    object-fit: contain !important;
+    margin: auto !important;
+    display: block !important;
+}
 
-    <a href="images/003.jpg">
-        <img src="images/003.jpg" alt="">
-    </a>
-
-</div>
-
-<script src="https://cdn.jsdelivr.net/npm/lightgallery@2.8.1/lightgallery.min.js"></script>
-
-<script src="https://cdn.jsdelivr.net/npm/lightgallery@2.8.1/plugins/zoom/lg-zoom.min.js"></script>
-
-<script src="https://cdn.jsdelivr.net/npm/lightgallery@2.8.1/plugins/thumbnail/lg-thumbnail.min.js"></script>
-
-<script src="script.js"></script>
-
-</body>
-</html>
+/* 팝업창이 띄워졌을 때 브라우저 창 우측의 메인 스크롤바 숨기기 */
+.lg-on {
+    overflow: hidden !important;
+}

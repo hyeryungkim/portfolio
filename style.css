@@ -44,17 +44,19 @@ body {
     position: fixed !important;
     top: 0 !important; left: 0 !important;
     width: 100vw !important; height: 100vh !important;
-    background-color: rgba(0, 0, 0, 0.95) !important; /* 완벽한 블랙 */
+    background-color: rgba(0, 0, 0, 0.95) !important; /* 완벽한 블랙 배경 */
     z-index: 999999 !important;
     justify-content: center !important;
     align-items: center !important;
 }
 
-/* [핵심 해결] 확대 사진이 모니터 높이의 최대 65% 안에 무조건 쏙 들어오게 제한 (스크롤바 원천 차단) */
+/* [🔥 황금 비율 교정] 플러스 버튼 안 눌러도 처음부터 모니터 창 가득 시원하게 보이도록 수정 */
 .custom-lightbox img {
-    max-width: 85vw !important;
-    max-height: 65vh !important;
-    object-fit: contain !important;
+    max-width: 90vw !important;  /* 👈 기존 85%에서 90%로 확대 */
+    max-height: 90vh !important; /* 👈 기존 65%에서 90%로 대폭 확대 (모니터 가득 채움) */
+    width: auto !important;
+    height: auto !important;
+    object-fit: contain !important; /* 사진 가로세로 비율 깨짐 절대 방지 */
     display: block !important;
     margin: auto !important;
 }

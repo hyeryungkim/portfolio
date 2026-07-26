@@ -4,15 +4,19 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Hyeryung Kim | Portfolio</title>
-    <!-- 📄 index.html 상단의 <head> 바로 아래에 이 한 줄을 복사해서 붙여넣으세요 -->
-<link href="https://googleapis.com" rel="stylesheet">
+    
+    <!-- 🌐 전 세계 모든 사람에게 Noto Serif Oriya 폰트를 강제 호출하는 안전 연결 코드 -->
+    <link rel="preconnect" href="https://googleapis.com">
+    <link rel="preconnect" href="https://gstatic.com" crossorigin>
+    <link href="https://googleapis.com/css2?family=Noto+Serif+Oriya:wght@300;400;700&display=swap" rel="stylesheet">
+    
     <link rel="stylesheet" href="style.css">
     <style>
         /* 첫 화면 사진 목록 정렬 */
         .gallery {
             display: grid !important;
             grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)) !important;
-            gap: 40px !important; /* 글씨 공간을 위해 간격을 조금 넓힘 */
+            gap: 40px !important;
             max-width: 1200px !important;
             margin: 0 auto !important;
             padding: 20px 0 !important;
@@ -34,7 +38,7 @@
             border-radius: 4px !important;
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06) !important;
             transition: transform 0.2s ease;
-            margin-bottom: 15px !important; /* 사진과 글씨 사이 간격 */
+            margin-bottom: 15px !important;
         }
 
         .gallery-item:hover {
@@ -48,25 +52,25 @@
             display: block !important;
         }
 
-        /* ✍️ [요청 반영] 사진 밑 제목 (얇은 두께, 색상, 가운데 정렬, 아담한 크기) */
+        /* ✍️ 사진 밑 제목 (세련된 Noto Serif Oriya 글꼴 고정) */
         .item-title {
             font-size: 14px !important;
-            font-weight: 600 !important;
+            font-weight: 300 !important;
             color: #4a4949 !important;
             margin: 0 0 6px 0 !important;
             letter-spacing: 0.5px !important;
-            font-family: "Noto Serif Oriya", serif !important; /* 👈 폰트 변경 (원하는 글꼴 이름 입력) */
+            font-family: "Noto Serif Oriya", serif !important; /* 👈 대소문자 매칭 및 폰트 강제 고정 */
         }
 
-        /* ✍️ [요청 반영] 사진 밑 설명글 (회색빛 색상, 가운데 정렬, 더 아담한 크기) */
+        /* ✍️ 사진 밑 설명글 (세련된 Noto Serif Oriya 글꼴 고정) */
         .item-desc {
             font-size: 11px !important;
-            font-weight: 500 !important;
-            color: #4a4949 !important;
+            font-weight: 300 !important;
+            color: #777777 !important;
             line-height: 1.5 !important;
             margin: 0 !important;
             white-space: pre-line !important;
-            font-family: "Noto Serif Oriya", serif !important; /* 👈 폰트 변경 (원하는 글꼴 이름 입력) */
+            font-family: "Noto Serif Oriya", serif !important; /* 👈 대소문자 매칭 및 폰트 강제 고정 */
         }
 
         /* 🖤 완벽 차단용 검은색 팝업창 레이아웃 */
@@ -161,7 +165,7 @@
 </head>
 <body>
 
-<!-- 🖼️ 자바스크립트가 알아서 채워줄 갤러리 영역 -->
+<!-- 🖼️ 자바스크립트 자동 빌드 갤러리 영역 -->
 <div id="gallery" class="gallery"></div>
 
 <!-- 🖤 팝업창 및 버튼 영역 -->
@@ -193,7 +197,7 @@
     </div>
 </div>
 
-<!-- ⚙️ 동적 생성 스크립트 -->
+<!-- ⚙️ 안전한 데이터 연동 스크립트 실행 -->
 <script src="script.js"></script>
 <script>
     let currentIndex = 0;
@@ -203,7 +207,11 @@
         const galleryContainer = document.getElementById('gallery');
         galleryContainer.innerHTML = '';
 
-        // script.js의 데이터를 바탕으로 사진 상자 + 텍스트 상자 세트를 자동 조립
+        if (!galleryData || galleryData.length === 0) {
+            galleryContainer.innerHTML = '<div style="color:#aaa; text-align:center; margin-top:50px;">등록된 사진이 없습니다.</div>';
+            return;
+        }
+
         galleryData.forEach((item, index) => {
             const containerDiv = document.createElement('div');
             containerDiv.className = 'gallery-container';
@@ -219,13 +227,11 @@
             itemDiv.appendChild(imgTag);
             containerDiv.appendChild(itemDiv);
 
-            // 제목 추가
             const titleH3 = document.createElement('h3');
             titleH3.className = 'item-title';
             titleH3.innerText = item.title;
             containerDiv.appendChild(titleH3);
 
-            // 설명글 추가
             const descP = document.createElement('p');
             descP.className = 'item-desc';
             descP.innerText = item.desc;
@@ -285,14 +291,3 @@
             if (e.key === 'Escape') closeLightbox();
         }
     });
-
-    document.getElementById('custom-lightbox').addEventListener('click', function(e) {
-        if (e.target === this || e.target === document.getElementById('lightbox-wrapper')) {
-            closeLightbox();
-        }
-    });
-
-    initGallery();
-</script>
-
-</body>

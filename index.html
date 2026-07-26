@@ -59,7 +59,7 @@
             color: #4a4949 !important;
             margin: 0 0 6px 0 !important;
             letter-spacing: 0.5px !important;
-            font-family: "Noto Serif Oriya", serif !important; /* 👈 대소문자 매칭 및 폰트 강제 고정 */
+            font-family: "Noto Serif Oriya", serif !important;
         }
 
         /* ✍️ 사진 밑 설명글 (세련된 Noto Serif Oriya 글꼴 고정) */
@@ -70,7 +70,7 @@
             line-height: 1.5 !important;
             margin: 0 !important;
             white-space: pre-line !important;
-            font-family: "Noto Serif Oriya", serif !important; /* 👈 대소문자 매칭 및 폰트 강제 고정 */
+            font-family: "Noto Serif Oriya", serif !important;
         }
 
         /* 🖤 완벽 차단용 검은색 팝업창 레이아웃 */
@@ -291,3 +291,5 @@
             if (e.key === 'Escape') closeLightbox();
         }
     });
+
+    document.getElementById('custom-lightbox').addEventListener('click', function(e) {

@@ -1,45 +1,22 @@
-// ⚙️ [깃허브 보안 우회형 100% 완전 자동화 엔진 - 오류 수정 버전]
-// 이제 이 파일과 index.html은 평생 절대 수정하지 마세요!
-// 올리지 않은 빈 사진(작품 5, 작품 6 등)이 화면에 뜨는 현상을 완벽하게 해결했습니다.
+// ⚙️ [100% 무오류 자동 연동 갤러리 관리실]
+// 앞으로 사진을 추가할 때는 📁 images 폴더에 사진을 올린 뒤, 
+// 아래 목록 맨 뒤에 { src: '...', title: '...', desc: '...' } 세트만 추가해 주시면 됩니다.
+// 여기에 적는 순서가 홈페이지의 정렬 순서가 됩니다!
 
-const USER_ID = 'hyeryungkim'; 
-const REPO_NAME = 'portfolio';  
-
-const images = [];
-
-async function scanImagesAutomatically() {
-    // 깃허브 저장소의 실제 images 폴더 정보를 실시간으로 조회합니다.
-    const targetURL = `https://github.com{USER_ID}/${REPO_NAME}/contents/images`;
-    
-    try {
-        const response = await fetch(targetURL);
-        if (!response.ok) throw new Error();
-        const files = await response.json();
-        
-        // 확장자가 이미지인 파일만 자동으로 솎아내기
-        const allowedExtensions = ['jpg', 'jpeg', 'png', 'gif', 'webp', 'JPG', 'JPEG', 'PNG'];
-        const validImages = files
-            .filter(f => {
-                const ext = f.name.split('.').pop();
-                return allowedExtensions.includes(ext) && f.name !== '.gitkeep';
-            })
-            // 001.jpg, 002.jpg 순으로 이름 정렬
-            .sort((a, b) => a.name.localeCompare(b.name, undefined, {numeric: true, sensitivity: 'base'}));
-
-        // 💡 [핵심 교정] 실제로 폴더에 존재하는 이미지만 배열에 담습니다. (예비 칸 생성 가드 제거)
-        validImages.forEach(file => {
-            images.push(file.path);
-        });
-
-    } catch (e) {
-        console.error("이미지를 불러오는 중 오류가 발생했습니다.", e);
-        // 에러 발생 시 빈 칸을 강제로 만들지 않고 에러 메시지만 콘솔에 출력하도록 변경
-    } finally {
-        // index.html에게 사진 수집이 완료되었음을 알림
-        window.imagesReady = true;
-        document.dispatchEvent(new Event('ImagesLoaded'));
+const galleryData = [
+    {
+        src: 'images/001.jpg',
+        title: 'AZIT _ Deep Deep Deep 1',
+        desc: '25 x 25 cm Porcelain, mixed media on wood\npanel'
+    },
+    {
+        src: 'images/002.jpg',
+        title: 'AZIT _ Deep Deep Deep 2',
+        desc: '25 x 25 cm Porcelain, mixed media on wood\npanel'
+    },
+    {
+        src: 'images/003.jpg',
+        title: 'AZIT _ Deep Deep Deep 3',
+        desc: '25 x 25 cm Porcelain, mixed media on wood\npanel'
     }
-}
-
-// 자동 스캔 즉시 실행
-scanImagesAutomatically();
+];

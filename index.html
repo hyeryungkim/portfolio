@@ -5,44 +5,186 @@ html<!DOCTYPE html>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Hyeryung Kim | Portfolio</title>
     <link rel="stylesheet" href="style.css">
+    <style>
+        /* 🖤 완벽 차단용 검은색 팝업창 레이아웃 */
+        .custom-lightbox {
+            display: none;
+            position: fixed;
+            top: 0; left: 0;
+            width: 100vw; height: 100vh;
+            background-color: rgba(0, 0, 0, 0.95);
+            z-index: 999999;
+            justify-content: center;
+            align-items: center;
+            user-select: none;
+        }
+
+        /* 🖼️ [황금 비율] 플러스 안 눌러도 모니터 가득 시원하게 꽉 차는 큰 사진 공간 */
+        .lightbox-wrapper {
+            position: relative;
+            max-width: 90vw;
+            max-height: 90vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: transform 0.2s ease; /* 확대/축소 애니메이션 */
+        }
+
+        .custom-lightbox img {
+            max-width: 90vw;
+            max-height: 90vh;
+            width: auto;
+            height: auto;
+            object-fit: contain;
+            display: block;
+        }
+
+        /* 🔍 상단 툴바 (확대 및 닫기 버튼 배치) */
+        .lightbox-toolbar {
+            position: absolute;
+            top: 20px;
+            right: 30px;
+            display: flex;
+            gap: 20px;
+            z-index: 1000000;
+        }
+
+        .toolbar-btn {
+            color: #ffffff;
+            font-size: 30px;
+            cursor: pointer;
+            opacity: 0.7;
+            transition: opacity 0.2s;
+        }
+        .toolbar-btn:hover {
+            opacity: 1;
+        }
+
+        /* ◀ ▶ 양옆으로 넘기는 화살표 버튼 스타일 */
+        .nav-btn {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #ffffff;
+            font-size: 50px;
+            font-weight: 100;
+            cursor: pointer;
+            padding: 20px;
+            opacity: 0.4;
+            transition: opacity 0.2s;
+            z-index: 1000000;
+        }
+        .nav-btn:hover {
+            opacity: 1;
+        }
+        .prev-btn { left: 20px; }
+        .next-btn { right: 20px; }
+    </style>
 </head>
 <body>
 
-<!-- 🖼️ 첫 화면 가로 바둑판 사진 목록 (WORK 글씨 삭제 완료) -->
+<!-- 🖼️ 첫 화면 가로 바둑판 사진 목록 -->
 <div class="gallery">
-    <div class="gallery-item" onclick="openLightbox('images/001.jpg')">
+    <!-- 사진을 추가하거나 순서를 바꿀 때는 여기 아래 세트들의 순서를 바꾸시면 됩니다 -->
+    <div class="gallery-item" onclick="openLightbox(0)">
         <img src="images/001.jpg" alt="작품 1">
     </div>
-    <div class="gallery-item" onclick="openLightbox('images/002.jpg')">
+    <div class="gallery-item" onclick="openLightbox(1)">
         <img src="images/002.jpg" alt="작품 2">
     </div>
-    <div class="gallery-item" onclick="openLightbox('images/003.jpg')">
+    <div class="gallery-item" onclick="openLightbox(2)">
         <img src="images/003.jpg" alt="작품 3">
     </div>
 </div>
 
-<!-- 🖤 클릭 시 모니터 한눈에 쏙 들어오는 아담한 검은색 팝업창 -->
-<div id="custom-lightbox" class="custom-lightbox" onclick="closeLightbox()">
-    <span class="custom-close-btn">&times;</span>
-    <img id="custom-lightbox-img" src="" alt="확대 사진">
+<!-- 🖤 완벽하게 조종되는 팝업창 및 버튼 영역 -->
+<div id="custom-lightbox" class="custom-lightbox">
+    <!-- 상단 우측 버튼들 (확대/축소 및 닫기) -->
+    <div class="lightbox-toolbar">
+        <span class="toolbar-btn" onclick="toggleZoom()" id="zoom-btn" title="확대/축소">🔍</span>
+        <span class="toolbar-btn" onclick="closeLightbox()" title="닫기">&times;</span>
+    </div>
+
+    <!-- 좌우 이동 화살표 -->
+    <span class="nav-btn prev-btn" onclick="changeImage(-1)">&lt;</span>
+    <span class="nav-btn next-btn" onclick="changeImage(1)">&gt;</span>
+
+    <!-- 큰 사진 몸체 -->
+    <div id="lightbox-wrapper" class="lightbox-wrapper">
+        <img id="custom-lightbox-img" src="" alt="확대 사진" onclick="event.stopPropagation();">
+    </div>
 </div>
 
-<!-- 외부 프로그램 없이 완벽하게 작동하는 초간단 실행 스크립트 -->
+<!-- 화살표 이동 및 돋보기 무오류 순수 스크립트 -->
 <script>
-    function openLightbox(imgSrc) {
-        document.getElementById('custom-lightbox-img').src = imgSrc;
-        document.getElementById('custom-lightbox').style.display = 'flex';
-        document.body.style.overflow = 'hidden'; /* 팝업 떴을 때 배경 스크롤바 차단 */
-    }
-    function closeLightbox() {
-        document.getElementById('custom-lightbox').style.display = 'none';
-        document.body.style.overflow = 'auto'; /* 팝업 닫으면 스크롤바 복구 */
-    }
-</script>
+    // 현재 올리신 이미지 목록을 순서대로 등록해 둔 배열입니다
+    const images = ['images/001.jpg', 'images/002.jpg', 'images/003.jpg'];
+    let currentIndex = 0;
+    let isZoomed = false;
 
-</body>
-</html>
-<script src="script.js"></script>
+    function openLightbox(index) {
+        currentIndex = index;
+        isZoomed = false;
+        updateLightbox();
+        document.getElementById('custom-lightbox').style.display = 'flex';
+        document.body.style.overflow = 'hidden';
+    }
+
+    function closeLightbox() {
+        document.getElementById('custom-lightbox').style.background = 'rgba(0, 0, 0, 0.95)';
+        document.getElementById('custom-lightbox').style.display = 'none';
+        document.body.style.overflow = 'auto';
+    }
+
+    function updateLightbox() {
+        // 사진 주소 교체 및 확대 초기화
+        const wrapper = document.getElementById('lightbox-wrapper');
+        document.getElementById('custom-lightbox-img').src = images[currentIndex];
+        wrapper.style.transform = 'scale(1)';
+        isZoomed = false;
+    }
+
+    // ◀ ▶ 옆으로 넘기는 함수
+    function changeImage(direction) {
+        currentIndex += direction;
+        if (currentIndex >= images.length) currentIndex = 0; // 마지막 사진에서 넘기면 첫 사진으로
+        if (currentIndex < 0) currentIndex = images.length - 1; // 첫 사진에서 뒤로가면 마지막 사진으로
+        updateLightbox();
+        event.stopPropagation(); // 팝업창 꺼짐 방지
+    }
+
+    // 🔍 확대/축소 버튼 함수 (토글 방식)
+    function toggleZoom() {
+        const wrapper = document.getElementById('lightbox-wrapper');
+        const lightbox = document.getElementById('custom-lightbox');
+        if (!isZoomed) {
+            wrapper.style.transform = 'scale(1.4)'; // 1.4배 확대 (스크롤 생기지 않는 최대선)
+            lightbox.style.overflow = 'auto'; // 확대 시 필요한 경우 스크롤 허용
+            isZoomed = true;
+        } else {
+            wrapper.style.transform = 'scale(1)';
+            lightbox.style.overflow = 'hidden';
+            isZoomed = false;
+        }
+        event.stopPropagation();
+    }
+
+    // 키보드 방향키(◀, ▶) 및 ESC 키 지원 추가
+    document.addEventListener('keydown', function(e) {
+        if (document.getElementById('custom-lightbox').style.display === 'flex') {
+            if (e.key === 'ArrowRight') changeImage(1);
+            if (e.key === 'ArrowLeft') changeImage(-1);
+            if (e.key === 'Escape') closeLightbox();
+        }
+    });
+
+    // 배경 클릭 시 팝업 닫기
+    document.getElementById('custom-lightbox').addEventListener('click', function(e) {
+        if (e.target === this || e.target === document.getElementById('lightbox-wrapper')) {
+            closeLightbox();
+        }
+    });
+</script>
 
 </body>
 </html>

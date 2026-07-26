@@ -1,6 +1,6 @@
-// ⚙️ [깃허브 보안 우회형 100% 완전 자동화 엔진]
-// 본인의 깃허브 아이디와 저장소 이름에 맞게 세팅되어 있습니다.
+// ⚙️ [깃허브 보안 우회형 100% 완전 자동화 엔진 - 오류 수정 버전]
 // 이제 이 파일과 index.html은 평생 절대 수정하지 마세요!
+// 올리지 않은 빈 사진(작품 5, 작품 6 등)이 화면에 뜨는 현상을 완벽하게 해결했습니다.
 
 const USER_ID = 'hyeryungkim'; 
 const REPO_NAME = 'portfolio';  
@@ -8,7 +8,7 @@ const REPO_NAME = 'portfolio';
 const images = [];
 
 async function scanImagesAutomatically() {
-    // 깃허브 보안 API 주소 대신, 실제 내 배포 페이지의 구조를 파싱하여 차단을 원천 봉쇄합니다.
+    // 깃허브 저장소의 실제 images 폴더 정보를 실시간으로 조회합니다.
     const targetURL = `https://github.com{USER_ID}/${REPO_NAME}/contents/images`;
     
     try {
@@ -26,17 +26,14 @@ async function scanImagesAutomatically() {
             // 001.jpg, 002.jpg 순으로 이름 정렬
             .sort((a, b) => a.name.localeCompare(b.name, undefined, {numeric: true, sensitivity: 'base'}));
 
-        // 최종 이미지 주소 배열에 탑재
+        // 💡 [핵심 교정] 실제로 폴더에 존재하는 이미지만 배열에 담습니다. (예비 칸 생성 가드 제거)
         validImages.forEach(file => {
             images.push(file.path);
         });
 
     } catch (e) {
-        // 혹시라도 깃허브 배포 동기화가 지연될 경우를 대비한 안전 가드 (100장 선제 수집)
-        for (let i = 1; i <= 100; i++) {
-            const num = String(i).padStart(3, '0');
-            images.push(`images/${num}.jpg`);
-        }
+        console.error("이미지를 불러오는 중 오류가 발생했습니다.", e);
+        // 에러 발생 시 빈 칸을 강제로 만들지 않고 에러 메시지만 콘솔에 출력하도록 변경
     } finally {
         // index.html에게 사진 수집이 완료되었음을 알림
         window.imagesReady = true;

@@ -198,5 +198,20 @@ const galleryData = [
         src: 'images/039.jpg',
         title: 'AZIT _ Yellow shadow 8 (Detail)',
         desc: '25 x 25 cm\nPorcelain, mixed media on wood panel'
+    },
+    {
+        src: 'images/040.jpg',
+        title: 'AZIT _ Echo of shadow',
+        desc: '27.3 x 34.8 cm\nPorcelain, mixed media on wood panel'
+    },
+    {
+        src: 'images/041.jpg',
+        title: 'AZIT _ Echo of shadow 4',
+        desc: '30 x 30 cm\nPorcelain, mixed media on wood panel'
+    },
+    {
+        src: 'images/042.jpg',
+        title: 'AZIT _ Echo of shadow 4 (Detail)',
+        desc: '30 x 30 cm\nPorcelain, mixed media on wood panel'
     }
 ];

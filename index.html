@@ -232,53 +232,192 @@
 </div>
 
 <script src="script.js"></script>
-<script>
-document.addEventListener('DOMContentLoaded', () => {
-  // 팝업창 내부의 이미지 요소를 선택합니다. (본인의 HTML 구조에 맞게 클래스나 ID를 수정하세요)
-  // 예: 팝업창 ID가 #imagePopup이고 그 안의 이미지라면 '#imagePopup img'
-  const popupImage = document.querySelector('.popup-content img') || document.querySelector('#popup img');
+let currentIndex = 0;
+    let isZoomed = false;
+    
+    const IMAGES_PER_PAGE = 9; 
+    let visibleCount = IMAGES_PER_PAGE;
 
-  if (!popupImage) return;
+    const lightbox = document.getElementById('custom-lightbox');
+    const wrapper = document.getElementById('lightbox-wrapper');
+    const lightboxImg = document.getElementById('custom-lightbox-img');
 
-  // 초기 상태 설정
-  let isZoomed = false;
-  popupImage.style.cursor = 'zoom-in';
-  popupImage.style.transition = 'transform 0.2s ease';
+    // 첫 화면 바둑판 그리기 빌드업 함수
+    function initGallery() {
+        const galleryContainer = document.getElementById('gallery');
+        galleryContainer.innerHTML = '';
 
-  // Alt 키 누름 감지하여 돋보기 모양 변경 (+ -> -)
-  window.addEventListener('keydown', (e) => {
-    if (e.key === 'Alt') {
-      e.preventDefault(); // 브라우저 기본 메뉴 바인딩 방지
-      popupImage.style.cursor = isZoomed ? 'zoom-out' : 'zoom-in';
+        if (!galleryData || galleryData.length === 0) {
+            galleryContainer.innerHTML = '<div style="color:#aaa; text-align:center; margin-top:50px;">등록된 사진이 없습니다.</div>';
+            document.getElementById('more-btn-area').style.display = 'none';
+            return;
+        }
+
+        galleryData.forEach((item, index) => {
+            const containerDiv = document.createElement('div');
+            containerDiv.className = 'gallery-container';
+            containerDiv.id = `item-container-${index}`;
+
+            const itemDiv = document.createElement('div');
+            itemDiv.className = 'gallery-item';
+            itemDiv.setAttribute('onclick', `openLightbox(${index})`);
+            
+            const imgTag = document.createElement('img');
+            imgTag.src = item.src;
+            imgTag.alt = item.title;
+            
+            itemDiv.appendChild(imgTag);
+            containerDiv.appendChild(itemDiv);
+
+            const titleH3 = document.createElement('h3');
+            titleH3.className = 'item-title';
+            titleH3.innerText = item.title;
+            containerDiv.appendChild(titleH3);
+
+            const descP = document.createElement('p');
+            descP.className = 'item-desc';
+            descP.innerText = item.desc;
+            containerDiv.appendChild(descP);
+
+            galleryContainer.appendChild(containerDiv);
+        });
+
+        updateVisibility();
     }
-  });
 
-  window.addEventListener('keyup', (e) => {
-    if (e.key === 'Alt') {
-      popupImage.style.cursor = isZoomed ? 'zoom-out' : 'zoom-in';
+    function updateVisibility() {
+        galleryData.forEach((item, index) => {
+            const targetElement = document.getElementById(`item-container-${index}`);
+            if (targetElement) {
+                if (index < visibleCount) {
+                    targetElement.style.display = 'flex';
+                } else {
+                    targetElement.style.display = 'none';
+                }
+            }
+        });
+
+        const moreBtnArea = document.getElementById('more-btn-area');
+        if (visibleCount >= galleryData.length) {
+            moreBtnArea.style.display = 'none';
+        } else {
+            moreBtnArea.style.display = 'block';
+        }
     }
-  });
 
-  // 클릭 이벤트 처리
-  popupImage.addEventListener('click', (e) => {
-    // 1. Alt 키를 누른 상태에서 클릭했을 때 (축소 기능)
-    if (e.altKey) {
-      if (isZoomed) {
-        popupImage.style.transform = 'scale(1)';
-        popupImage.style.cursor = 'zoom-in';
+    function showNextImages() {
+        visibleCount += IMAGES_PER_PAGE;
+        updateVisibility();
+    }
+
+    function openLightbox(index) {
+        currentIndex = index;
         isZoomed = false;
-      }
-    } 
-    // 2. 그냥 클릭했을 때 (확대 기능)
-    else {
-      if (!isZoomed) {
-        popupImage.style.transform = 'scale(2)'; // 원하는 확대 배율로 조절 가능 (예: 1.5, 2, 2.5)
-        popupImage.style.cursor = 'zoom-out';
-        isZoomed = true;
-      }
+        updateLightbox();
+        lightbox.style.display = 'flex';
+        document.body.style.overflow = 'hidden';
     }
-  });
-});
+
+    function closeLightbox() {
+        lightbox.style.display = 'none';
+        document.body.style.overflow = 'auto';
+    }
+
+    function updateLightbox() {
+        lightboxImg.src = galleryData[currentIndex].src;
+        wrapper.style.transform = 'scale(1)';
+        lightbox.style.overflow = 'hidden'; 
+        isZoomed = false;
+        updateCursorStatus(false); 
+    }
+
+    function changeImage(direction, event) {
+        if (event) event.stopPropagation();
+        currentIndex += direction;
+        if (currentIndex >= galleryData.length) currentIndex = 0; 
+        if (currentIndex < 0) currentIndex = galleryData.length - 1; 
+        updateLightbox();
+    }
+
+    // 🔍 실시간 돋보기 커서(+ / -) 스위칭 빌더
+    function updateCursorStatus(altActive) {
+        if (altActive) {
+            lightboxImg.style.cursor = 'zoom-out';
+        } else {
+            lightboxImg.style.cursor = isZoomed ? 'zoom-out' : 'zoom-in';
+        }
+    }
+
+    // 🎹 Alt 키 입력 감지 이벤트 룸
+    window.addEventListener('keydown', (e) => {
+        if (lightbox.style.display !== 'flex') return;
+        if (e.key === 'Alt') {
+            e.preventDefault(); 
+            updateCursorStatus(true);
+        }
+        
+        if (e.key === 'ArrowRight') changeImage(1);
+        if (e.key === 'ArrowLeft') changeImage(-1);
+        if (e.key === 'Escape') closeLightbox();
+    });
+
+    window.addEventListener('keyup', (e) => {
+        if (e.key === 'Alt') {
+            updateCursorStatus(false);
+        }
+    });
+
+    // 🖱️ 클릭 클릭 확대/축소 제어기
+    lightboxImg.addEventListener('click', (e) => {
+        e.stopPropagation(); 
+
+        if (e.altKey) {
+            if (isZoomed) {
+                wrapper.style.transform = 'scale(1)';
+                lightbox.style.overflow = 'hidden';
+                isZoomed = false;
+                updateCursorStatus(false);
+            }
+        } 
+        else {
+            if (!isZoomed) {
+                wrapper.style.transform = 'scale(3.0)'; 
+                lightbox.style.overflow = 'auto'; 
+                isZoomed = true;
+                updateCursorStatus(false);
+            }
+        }
+    });
+
+    // ❌ 사진 밖 검은색 뒷배경 여백을 클릭하면 창 닫기
+    lightbox.addEventListener('click', function(e) {
+        if (e.target === this || e.target === wrapper) {
+            closeLightbox();
+        }
+    });
+
+    // 안전 모바일 터치 트래킹 시스템 내장
+    let isDragging = false;
+    let startX, startY, scrollLeft, scrollTop;
+    lightbox.addEventListener('touchstart', (e) => {
+        if (!isZoomed) return;
+        isDragging = true;
+        startX = e.touches[0].pageX - lightbox.offsetLeft;
+        startY = e.touches[0].pageY - lightbox.offsetTop;
+        scrollLeft = lightbox.scrollLeft;
+        scrollTop = lightbox.scrollTop;
+    }, { passive: true });
+    lightbox.addEventListener('touchend', () => { isDragging = false; });
+    lightbox.addEventListener('touchmove', (e) => {
+        if (!isDragging) return;
+        const x = e.touches[0].pageX - lightbox.offsetLeft;
+        const y = e.touches[0].pageY - lightbox.offsetTop;
+        lightbox.scrollLeft = scrollLeft - (x - startX) * 1.5;
+        lightbox.scrollTop = scrollTop - (y - startY) * 1.5;
+    }, { passive: true });
+
+    // 시스템 가동
+    initGallery();
 </script>
 
 </body>

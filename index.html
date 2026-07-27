@@ -5,13 +5,44 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Hyeryung Kim | Portfolio</title>
     
-    <!-- Noto Serif Oriya 폰트 안전 연결 -->
-    <link rel="preconnect" href="https://googleapis.com">
-    <link rel="preconnect" href="https://gstatic.com" crossorigin>
-    <link href="https://googleapis.com/css2?family=Noto+Serif+Oriya:wght@300;400;700&display=swap" rel="stylesheet">
+    <!-- 🌐 Noto Serif Oriya 공식 구글 주소 연동 -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://googleapis.com" rel="stylesheet">
     
     <link rel="stylesheet" href="style.css">
     <style>
+        /* ======================================================= */
+        /* ✍ [질문자님이 직접 수정하신 디자인 세팅값을 완벽 반영했습니다] */
+        /* ======================================================== */
+        
+        /* 1. 작품 제목(Title) 디자인 조절 */
+        .item-title { 
+            font-family: "Noto Serif Oriya", serif !important; 
+            color: #4a4949 !important; 
+            text-align: center !important;
+            letter-spacing: 0.5px !important; 
+            margin: 0 0 6px 0 !important; 
+            font-size: 14px !important;    /* 👈 크기 */
+            font-weight: 500 !important;   /* 👈 [수정반영] 조금 두껍게(500) 고정 */
+        }
+        
+        /* 2. 작품 설명 및 사이즈(Description) 디자인 조절 */
+        .item-desc { 
+            font-family: "Noto Serif Oriya", serif !important; 
+            color: #4a4949 !important;     /* 👈 [수정반영] 더 명확한 어두운 색상 고정 */
+            text-align: center !important;
+            line-height: 1.5 !important; 
+            margin: 0 !important; 
+            white-space: pre-line !important; 
+            font-size: 11px !important;    /* 👈 크기 */
+            font-weight: 400 !important;   /* 👈 [수정반영] 보통 두께(400) 고정 */
+        }
+
+        /* ======================================================== */
+        /* 아래는 건드리지 않아도 되는 전체 홈페이지 뼈대 레이아웃입니다 */
+        /* ======================================================== */
+
         /* 첫 화면 사진 목록 정렬 (3열 바둑판 고정) */
         .gallery {
             display: grid !important;

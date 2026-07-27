@@ -130,7 +130,7 @@ const galleryData = [
         desc: '25 x 25 cm\nPorcelain, mixed media on wood panel'
     },
     {
-        src: 'images/025.jpg',
+        src: 'images/026.jpg',
         title: 'AZIT _  Black shadow 3',
         desc: '25 x 25 cm\nPorcelain, mixed media on wood panel'
     },

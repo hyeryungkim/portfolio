@@ -371,6 +371,61 @@
     closeLightbox();
 });
 
+    // 🖼️ [🔥 새로 추가할 드래그 감상 시스템] 
+    // 300% 확대된 사진을 마우스로 잡고 이리저리 끌어서 구석구석 감상하는 기능입니다.
+    let isDragging = false;
+    let startX, startY, scrollLeft, scrollTop;
+    const lightbox = document.getElementById('custom-lightbox');
+
+    // 마우스를 꾹 눌렀을 때 (드래그 시작)
+    lightbox.addEventListener('mousedown', (e) => {
+        if (!isZoomed) return; // 확대된 상태에서만 작동하도록 가드
+        isDragging = true;
+        lightbox.style.cursor = 'grabbing'; // 손바닥 꽉 쥔 모양 커서
+        startX = e.pageX - lightbox.offsetLeft;
+        startY = e.pageY - lightbox.offsetTop;
+        scrollLeft = lightbox.scrollLeft;
+        scrollTop = lightbox.scrollTop;
+        e.preventDefault(); // 사진이 웹브라우저 기본 고스트 이미지로 복사되는 버그 방지
+    });
+
+    // 마우스를 떼거나 검은창 바깥으로 나갔을 때 (드래그 종료)
+    lightbox.addEventListener('mouseleave', () => { isDragging = false; lightbox.style.cursor = isZoomed ? 'zoom-out' : 'zoom-in'; });
+    lightbox.addEventListener('mouseup', () => { isDragging = false; lightbox.style.cursor = isZoomed ? 'zoom-out' : 'zoom-in'; });
+
+    // 마우스를 움직일 때 (이리저리 사진 밀기 실행)
+    lightbox.addEventListener('mousemove', (e) => {
+        if (!isDragging) return;
+        e.preventDefault();
+        const x = e.pageX - lightbox.offsetLeft;
+        const y = e.pageY - lightbox.offsetTop;
+        const walkX = (x - startX) * 1.5; // 1.5배 속도로 민첩하게 이동
+        const walkY = (y - startY) * 1.5;
+        lightbox.scrollLeft = scrollLeft - walkX;
+        lightbox.scrollTop = scrollTop - walkY;
+    });
+
+    // 스마트폰/태블릿 터치 스크린 대응 (손가락으로 부드럽게 밀기)
+    lightbox.addEventListener('touchstart', (e) => {
+        if (!isZoomed) return;
+        isDragging = true;
+        startX = e.touches[0].pageX - lightbox.offsetLeft;
+        startY = e.touches[0].pageY - lightbox.offsetTop;
+        scrollLeft = lightbox.scrollLeft;
+        scrollTop = lightbox.scrollTop;
+    }, { passive: true });
+
+    lightbox.addEventListener('touchend', () => { isDragging = false; });
+
+    lightbox.addEventListener('touchmove', (e) => {
+        if (!isDragging) return;
+        const x = e.touches[0].pageX - lightbox.offsetLeft;
+        const y = e.touches[0].pageY - lightbox.offsetTop;
+        const walkX = (x - startX) * 1.5;
+        const walkY = (y - startY) * 1.5;
+        lightbox.scrollLeft = scrollLeft - walkX;
+        lightbox.scrollTop = scrollTop - walkY;
+    }, { passive: true });
     // 전체 시스템 기동 단추
     initGallery();
 </script>

@@ -367,27 +367,24 @@
             }
         });
 
-        // 🖱️ 클릭 클릭 확대/축소 제어기
-        lightboxImg.addEventListener('click', (e) => {
-            e.stopPropagation(); 
+       // ✨ 이 코드로 바꾸어 넣으세요! (알트 없이 그냥 클릭으로 확대/축소 무한 반복)
+lightboxImg.addEventListener('click', (e) => {
+    e.stopPropagation(); // 배경 클릭 꺼짐 현상 방지 가드
 
-            if (e.altKey) {
-                if (isZoomed) {
-                    wrapper.style.transform = 'scale(1)';
-                    lightbox.style.overflow = 'hidden';
-                    isZoomed = false;
-                    updateCursorStatus(false);
-                }
-            } 
-            else {
-                if (!isZoomed) {
-                    wrapper.style.transform = 'scale(3.0)'; 
-                    lightbox.style.overflow = 'auto'; 
-                    isZoomed = true;
-                    updateCursorStatus(false);
-                }
-            }
-        });
+    if (isZoomed) {
+        // 1. 이미 확대된 상태라면? ➡️ 그냥 클릭 시 원래대로 '축소'
+        wrapper.style.transform = 'scale(1)';
+        lightbox.style.overflow = 'hidden';
+        isZoomed = false;
+        updateCursorStatus(false);
+    } else {
+        // 2. 축소된 상태라면? ➡️ 그냥 클릭 시 300% 대형 '확대'
+        wrapper.style.transform = 'scale(3.0)';
+        lightbox.style.overflow = 'auto';
+        isZoomed = true;
+        updateCursorStatus(false);
+    }
+});
 
         // ❌ 사진 밖 검은색 뒷배경 여백을 클릭하면 창 닫기
         lightbox.addEventListener('click', function(e) {

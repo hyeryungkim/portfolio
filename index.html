@@ -368,10 +368,8 @@
 
     // 배경 클릭 시 팝업 닫기
     document.getElementById('custom-lightbox').addEventListener('click', function(e) {
-        if (e.target === this || e.target === document.getElementById('lightbox-wrapper')) {
-            closeLightbox();
-        }
-    });
+    closeLightbox();
+});
 
     // 전체 시스템 기동 단추
     initGallery();

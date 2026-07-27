@@ -195,7 +195,7 @@ const galleryData = [
         desc: '25 x 25 cm\nPorcelain, mixed media on wood panel'
     },
     {
-        src: 'images/038.jpg',
+        src: 'images/039.jpg',
         title: 'AZIT _ Yellow shadow 8 (Detail)',
         desc: '25 x 25 cm\nPorcelain, mixed media on wood panel'
     }

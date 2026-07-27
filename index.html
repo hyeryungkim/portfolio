@@ -233,239 +233,52 @@
 
 <script src="script.js"></script>
 <script>
-    let currentIndex = 0;
-    let isZoomed = false;
-    
-    const IMAGES_PER_PAGE = 9; 
-    let visibleCount = IMAGES_PER_PAGE;
+document.addEventListener('DOMContentLoaded', () => {
+  // 팝업창 내부의 이미지 요소를 선택합니다. (본인의 HTML 구조에 맞게 클래스나 ID를 수정하세요)
+  // 예: 팝업창 ID가 #imagePopup이고 그 안의 이미지라면 '#imagePopup img'
+  const popupImage = document.querySelector('.popup-content img') || document.querySelector('#popup img');
 
-    // 🎹 키보드 상태 실시간 감지 변수들
-    let isSpacePressed = false;
-    let isCtrlPressed = false;
-    let isAltPressed = false;
+  if (!popupImage) return;
 
-    // 🖱️ 드래그 앤 팬 이동 관련 변수들
-    let isDragging = false;
-    let startX, startY, scrollLeft, scrollTop;
-    const lightbox = document.getElementById('custom-lightbox');
-    const wrapper = document.getElementById('lightbox-wrapper');
-    const lightboxImg = document.getElementById('custom-lightbox-img');
+  // 초기 상태 설정
+  let isZoomed = false;
+  popupImage.style.cursor = 'zoom-in';
+  popupImage.style.transition = 'transform 0.2s ease';
 
-    function initGallery() {
-        const galleryContainer = document.getElementById('gallery');
-        galleryContainer.innerHTML = '';
-
-        if (!galleryData || galleryData.length === 0) {
-            galleryContainer.innerHTML = '<div style="color:#aaa; text-align:center; margin-top:50px;">등록된 사진이 없습니다.</div>';
-            document.getElementById('more-btn-area').style.display = 'none';
-            return;
-        }
-
-        galleryData.forEach((item, index) => {
-            const containerDiv = document.createElement('div');
-            containerDiv.className = 'gallery-container';
-            containerDiv.id = `item-container-${index}`;
-
-            const itemDiv = document.createElement('div');
-            itemDiv.className = 'gallery-item';
-            itemDiv.setAttribute('onclick', `openLightbox(${index})`);
-            
-            const imgTag = document.createElement('img');
-            imgTag.src = item.src;
-            imgTag.alt = item.title;
-            
-            itemDiv.appendChild(imgTag);
-            containerDiv.appendChild(itemDiv);
-
-            const titleH3 = document.createElement('h3');
-            titleH3.className = 'item-title';
-            titleH3.innerText = item.title;
-            containerDiv.appendChild(titleH3);
-
-            const descP = document.createElement('p');
-            descP.className = 'item-desc';
-            descP.innerText = item.desc;
-            containerDiv.appendChild(descP);
-
-            galleryContainer.appendChild(containerDiv);
-        });
-
-        updateVisibility();
+  // Alt 키 누름 감지하여 돋보기 모양 변경 (+ -> -)
+  window.addEventListener('keydown', (e) => {
+    if (e.key === 'Alt') {
+      e.preventDefault(); // 브라우저 기본 메뉴 바인딩 방지
+      popupImage.style.cursor = isZoomed ? 'zoom-out' : 'zoom-in';
     }
+  });
 
-    function updateVisibility() {
-        galleryData.forEach((item, index) => {
-            const targetElement = document.getElementById(`item-container-${index}`);
-            if (targetElement) {
-                if (index < visibleCount) {
-                    targetElement.style.display = 'flex';
-                } else {
-                    targetElement.style.display = 'none';
-                }
-            }
-        });
-
-        const moreBtnArea = document.getElementById('more-btn-area');
-        if (visibleCount >= galleryData.length) {
-            moreBtnArea.style.display = 'none';
-        } else {
-            moreBtnArea.style.display = 'block';
-        }
+  window.addEventListener('keyup', (e) => {
+    if (e.key === 'Alt') {
+      popupImage.style.cursor = isZoomed ? 'zoom-out' : 'zoom-in';
     }
+  });
 
-    function showNextImages() {
-        visibleCount += IMAGES_PER_PAGE;
-        updateVisibility();
-    }
-
-    function openLightbox(index) {
-        currentIndex = index;
+  // 클릭 이벤트 처리
+  popupImage.addEventListener('click', (e) => {
+    // 1. Alt 키를 누른 상태에서 클릭했을 때 (축소 기능)
+    if (e.altKey) {
+      if (isZoomed) {
+        popupImage.style.transform = 'scale(1)';
+        popupImage.style.cursor = 'zoom-in';
         isZoomed = false;
-        updateLightbox();
-        lightbox.style.display = 'flex';
-        document.body.style.overflow = 'hidden';
+      }
+    } 
+    // 2. 그냥 클릭했을 때 (확대 기능)
+    else {
+      if (!isZoomed) {
+        popupImage.style.transform = 'scale(2)'; // 원하는 확대 배율로 조절 가능 (예: 1.5, 2, 2.5)
+        popupImage.style.cursor = 'zoom-out';
+        isZoomed = true;
+      }
     }
-
-    function closeLightbox() {
-        lightbox.style.display = 'none';
-        document.body.style.overflow = 'auto';
-        resetKeyStates();
-    }
-
-    function updateLightbox() {
-        lightboxImg.src = galleryData[currentIndex].src;
-        wrapper.style.transform = 'scale(1)';
-        lightbox.style.overflow = 'hidden'; 
-        isZoomed = false;
-        updateCursor();
-    }
-
-    function changeImage(direction, event) {
-        if (event) event.stopPropagation();
-        currentIndex += direction;
-        if (currentIndex >= galleryData.length) currentIndex = 0; 
-        if (currentIndex < 0) currentIndex = galleryData.length - 1; 
-        updateLightbox();
-    }
-
-    // 🔍 마우스 스타일 커서 상황별 강제 조립 장치
-    function updateCursor() {
-        if (lightbox.style.display !== 'flex') return;
-        
-        if (isSpacePressed) {
-            lightbox.style.cursor = isDragging ? 'grabbing' : 'grab'; // ✋ 스페이스바 = 손바닥 모드 고정
-            lightboxImg.style.cursor = isDragging ? 'grabbing' : 'grab';
-        } else if (isCtrlPressed) {
-            lightbox.style.cursor = 'zoom-in';  // 🔍+ 컨트롤 = 확대 모드
-            lightboxImg.style.cursor = 'zoom-in';
-        } else if (isAltPressed) {
-            lightbox.style.cursor = 'zoom-out'; // 🔍- 알트 = 축소 모드
-            lightboxImg.style.cursor = 'zoom-out';
-        } else {
-            lightbox.style.cursor = 'pointer';  // 아무것도 안 누르면 그냥 일반 클릭 닫기 포인터
-            lightboxImg.style.cursor = 'pointer';
-        }
-    }
-
-    function resetKeyStates() {
-        isSpacePressed = false; isCtrlPressed = false; isAltPressed = false; isDragging = false;
-        updateCursor();
-    }
-
-    // 🎹 키보드를 누르는 순간 감지 엔진
-    document.addEventListener('keydown', function(e) {
-        if (lightbox.style.display !== 'flex') return;
-
-        if (e.code === 'Space') {
-            isSpacePressed = true;
-            e.preventDefault(); // 스페이스바 눌렀을 때 임베드 창 스크롤 방지
-            updateCursor();
-        }
-        if (e.key === 'Control') { isCtrlPressed = true; updateCursor(); }
-        if (e.key === 'Alt') { isAltPressed = true; updateCursor(); }
-
-        // 방향키 및 ESC 연동
-        if (e.key === 'ArrowRight') changeImage(1);
-        if (e.key === 'ArrowLeft') changeImage(-1);
-        if (e.key === 'Escape') closeLightbox();
-    });
-
-    // 🎹 키보드에서 손을 떼는 순간 감지 엔진
-    document.addEventListener('keyup', function(e) {
-        if (e.code === 'Space') { isSpacePressed = false; updateCursor(); }
-        if (e.key === 'Control') { isCtrlPressed = false; updateCursor(); }
-        if (e.key === 'Alt') { isAltPressed = false; updateCursor(); }
-    });
-
-    // 🖱️ 큰 팝업창 영역 통합 클릭 감지기
-    lightbox.addEventListener('click', function(e) {
-        // 화살표 버튼을 누른 게 아닐 때만 작동
-        if (e.target.closest('.nav-btn')) return;
-
-        if (isCtrlPressed) {
-            // 🔥 Ctrl + 클릭 = 300% 확대 기동
-            wrapper.style.transform = 'scale(3.0)';
-            lightbox.style.overflow = 'auto';
-            isZoomed = true;
-        } else if (isAltPressed) {
-            // 🔥 Alt + 클릭 = 100% 원래 크기로 축소
-            wrapper.style.transform = 'scale(1.4)'; /* 아담한 기본 액자 비율선 유지 */
-            lightbox.style.overflow = 'hidden';
-            isZoomed = false;
-        } else if (!isSpacePressed) {
-            // 🔥 아무 단축키도 안 누르고 그냥 클릭 = 즉시 팝업 닫기
-            closeLightbox();
-        }
-    });
-
-    // ✋ [스페이스바용] 마우스 드래그 앤 팬 시스템 기동
-    lightbox.addEventListener('mousedown', (e) => {
-        if (!isSpacePressed || !isZoomed) return; // 스페이스바를 누르고 확대 상태일 때만 드래그 가동
-        isDragging = true;
-        updateCursor();
-        startX = e.pageX - lightbox.offsetLeft;
-        startY = e.pageY - lightbox.offsetTop;
-        scrollLeft = lightbox.scrollLeft;
-        scrollTop = lightbox.scrollTop;
-        e.preventDefault();
-    });
-
-    lightbox.addEventListener('mousemove', (e) => {
-        if (!isDragging) return;
-        e.preventDefault();
-        const x = e.pageX - lightbox.offsetLeft;
-        const y = e.pageY - lightbox.offsetTop;
-        const walkX = (x - startX) * 1.5; // 드래그 감도 조절
-        const walkY = (y - startY) * 1.5;
-        lightbox.scrollLeft = scrollLeft - walkX;
-        lightbox.scrollTop = scrollTop - walkY;
-    });
-
-    lightbox.addEventListener('mouseup', () => { if (isDragging) { isDragging = false; updateCursor(); } });
-    lightbox.addEventListener('mouseleave', () => { if (isDragging) { isDragging = false; updateCursor(); } });
-
-    // 스마트폰 터치 연동 가드
-    lightbox.addEventListener('touchstart', (e) => {
-        if (!isZoomed) return;
-        isDragging = true;
-        startX = e.touches[0].pageX - lightbox.offsetLeft;
-        startY = e.touches[0].pageY - lightbox.offsetTop;
-        scrollLeft = lightbox.scrollLeft;
-        scrollTop = lightbox.scrollTop;
-    }, { passive: true });
-    lightbox.addEventListener('touchend', () => { isDragging = false; });
-    lightbox.addEventListener('touchmove', (e) => {
-        if (!isDragging) return;
-        const x = e.touches[0].pageX - lightbox.offsetLeft;
-        const y = e.touches[0].pageY - lightbox.offsetTop;
-        lightbox.scrollLeft = scrollLeft - (x - startX) * 1.5;
-        lightbox.scrollTop = scrollTop - (y - startY) * 1.5;
-    }, { passive: true });
-
-    // 전용 브라우저 이탈 방지 가드 (창 밖으로 마우스가 튀었을 때 키보드 먹통 현상 백업)
-    window.addEventListener('blur', resetKeyStates);
-
-    initGallery();
+  });
+});
 </script>
 
 </body>

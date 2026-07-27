@@ -281,3 +281,89 @@
                 }
             }
         });
+        // 💡 [여기서부터 복사하세요] 전체 사진을 다 보여줬다면 MORE 버튼 스스로 숨기기
+        const moreBtnArea = document.getElementById('more-btn-area');
+        if (visibleCount >= galleryData.length) {
+            moreBtnArea.style.display = 'none';
+        } else {
+            moreBtnArea.style.display = 'block';
+        }
+    }
+
+    // 💡 MORE 버튼 누르면 실행되는 함수 (9장 추가)
+    function showNextImages() {
+        visibleCount += IMAGES_PER_PAGE;
+        updateVisibility();
+    }
+
+    function openLightbox(index) {
+        currentIndex = index;
+        isZoomed = false;
+        updateLightbox();
+        document.getElementById('custom-lightbox').style.display = 'flex';
+        document.body.style.overflow = 'hidden';
+    }
+
+    function closeLightbox() {
+        document.getElementById('custom-lightbox').style.display = 'none';
+        document.body.style.overflow = 'auto';
+    }
+
+    function updateLightbox() {
+        const wrapper = document.getElementById('lightbox-wrapper');
+        const lightbox = document.getElementById('custom-lightbox');
+        document.getElementById('custom-lightbox-img').src = galleryData[currentIndex].src;
+        wrapper.style.transform = 'scale(1)';
+        lightbox.classList.remove('zoomed-mode');
+        lightbox.style.overflow = 'hidden'; 
+        isZoomed = false;
+    }
+
+    function changeImage(direction, event) {
+        if (event) event.stopPropagation();
+        currentIndex += direction;
+        if (currentIndex >= galleryData.length) currentIndex = 0; 
+        if (currentIndex < 0) currentIndex = galleryData.length - 1; 
+        updateLightbox();
+    }
+
+    // 🔍 사진 본체를 다이렉트로 터치/클릭하면 300% 늘어나는 심플 마술 장치
+    function toggleZoom(event) {
+        if (event) event.stopPropagation();
+        const wrapper = document.getElementById('lightbox-wrapper');
+        const lightbox = document.getElementById('custom-lightbox');
+        if (!isZoomed) {
+            wrapper.style.transform = 'scale(3.0)'; 
+            lightbox.classList.add('zoomed-mode'); 
+            lightbox.style.overflow = 'auto';      
+            isZoomed = true;
+        } else {
+            wrapper.style.transform = 'scale(1)';
+            lightbox.classList.remove('zoomed-mode'); 
+            lightbox.style.overflow = 'hidden';
+            isZoomed = false;
+        }
+    }
+
+    // 키보드 제어 시스템
+    document.addEventListener('keydown', function(e) {
+        if (document.getElementById('custom-lightbox').style.display === 'flex') {
+            if (e.key === 'ArrowRight') changeImage(1);
+            if (e.key === 'ArrowLeft') changeImage(-1);
+            if (e.key === 'Escape') closeLightbox();
+        }
+    });
+
+    // 배경 클릭 시 팝업 닫기
+    document.getElementById('custom-lightbox').addEventListener('click', function(e) {
+        if (e.target === this || e.target === document.getElementById('lightbox-wrapper')) {
+            closeLightbox();
+        }
+    });
+
+    // 전체 시스템 기동 단추
+    initGallery();
+</script>
+
+</body>
+</html>

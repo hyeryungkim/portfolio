@@ -138,5 +138,65 @@ const galleryData = [
         src: 'images/027.jpg',
         title: 'AZIT _  Black shadow 4',
         desc: '25 x 25 cm\nAcrylic on wood panel'
+    },
+    {
+        src: 'images/028.jpg',
+        title: 'AZIT _ Yellow shadow 1',
+        desc: '45 x 45 cm\nPorcelain, mixed media on wood panel'
+    },
+    {
+        src: 'images/029.jpg',
+        title: 'AZIT _ Yellow shadow 2',
+        desc: '25 x 25 cm\nPorcelain, mixed media on wood panel'
+    },
+    {
+        src: 'images/030.jpg',
+        title: 'AZIT _ Yellow shadow 3',
+        desc: '25 x 25 cm\nPorcelain, mixed media on wood panel'
+    },
+    {
+        src: 'images/031.jpg',
+        title: 'AZIT _ Yellow shadow 4',
+        desc: '25 x 25 cm\nPorcelain, mixed media on wood panel'
+    },
+    {
+        src: 'images/032.jpg',
+        title: 'AZIT _ Yellow shadow 5',
+        desc: '45 x 45 cm\nPorcelain, mixed media on wood panel'
+    },
+    {
+        src: 'images/033.jpg',
+        title: 'AZIT _ Yellow shadow 6',
+        desc: '25 x 25 cm\nPorcelain, mixed media on wood panel'
+    },
+    {
+        src: 'images/034.jpg',
+        title: 'AZIT _ Yellow shadow 6 (Detail1)',
+        desc: '25 x 25 cm\nPorcelain, mixed media on wood panel'
+    },
+    {
+        src: 'images/035.jpg',
+        title: 'AZIT _ Yellow shadow 6 (Detail2)',
+        desc: '25 x 25 cm\nPorcelain, mixed media on wood panel'
+    },
+    {
+        src: 'images/036.jpg',
+        title: 'AZIT _ Yellow shadow 7',
+        desc: '25 x 25 cm\nPorcelain, mixed media on wood panel'
+    },
+    {
+        src: 'images/037.jpg',
+        title: 'AZIT _ Yellow shadow 7 (Detail)',
+        desc: '25 x 25 cm\nPorcelain, mixed media on wood panel'
+    },
+    {
+        src: 'images/038.jpg',
+        title: 'AZIT _ Yellow shadow 8',
+        desc: '25 x 25 cm\nPorcelain, mixed media on wood panel'
+    },
+    {
+        src: 'images/038.jpg',
+        title: 'AZIT _ Yellow shadow 8 (Detail)',
+        desc: '25 x 25 cm\nPorcelain, mixed media on wood panel'
     }
 ];

@@ -53,5 +53,40 @@ const galleryData = [
         src: 'images/010.jpg',
         title: 'AZIT _ Tranquil shadow 3',
         desc: '31.8 x 31.8 cm\nPorcelain, mixed media on wood panel'
+    },
+    {
+        src: 'images/011.jpg',
+        title: 'AZIT _ Tranquil shadow 3 (Detail)',
+        desc: '31.8 x 31.8 cm\nPorcelain, mixed media on wood panel'
+    },
+    {
+        src: 'images/012.jpg',
+        title: 'AZIT _ Tranquil shadow 4',
+        desc: '31.8 x 31.8 cm\nPorcelain, mixed media on wood panel'
+    },
+    {
+        src: 'images/013.jpg',
+        title: 'AZIT _ Tranquil shadow 4 (Detail)',
+        desc: '31.8 x 31.8 cm\nPorcelain, mixed media on wood panel'
+    },
+    {
+        src: 'images/014.jpg',
+        title: 'AZIT _ Tranquil shadow 5',
+        desc: '31.8 x 31.8 cm\nPorcelain, mixed media on wood panel'
+    },
+    {
+        src: 'images/015.jpg',
+        title: 'AZIT _ Tranquil shadow 5 (Detail)',
+        desc: '31.8 x 31.8 cm\nPorcelain, mixed media on wood panel'
+    },
+    {
+        src: 'images/016.jpg',
+        title: 'AZIT _ Tranquil shadow 6',
+        desc: '31.8 x 31.8 cm\nPorcelain, mixed media on wood panel'
+    },
+    {
+        src: 'images/017.jpg',
+        title: 'AZIT _ Tranquil shadow 6 (Detail)',
+        desc: '31.8 x 31.8 cm\nPorcelain, mixed media on wood panel'
     }
 ];

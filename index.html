@@ -6,47 +6,15 @@
     <title>Hyeryung Kim | Portfolio</title>
     
     <!-- 🌐 Noto Serif Oriya 공식 구글 주소 연동 -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://googleapis.com" rel="stylesheet">
+    <link rel="preconnect" href="https://googleapis.com">
+    <link rel="preconnect" href="https://gstatic.com" crossorigin>
+    <link href="https://googleapis.com/css2?family=Noto+Serif+Oriya:wght@300;400;500;700&display=swap" rel="stylesheet">
     
     <link rel="stylesheet" href="style.css">
     <style>
-        /* ======================================================= */
-        /* ✍ [질문자님이 직접 수정하신 디자인 세팅값을 완벽 반영했습니다] */
-        /* ======================================================== */
-        
-        /* 1. 작품 제목(Title) 디자인 조절 */
-        .item-title { 
-            font-family: "Noto Serif Oriya", serif !important; 
-            color: #4a4949 !important; 
-            text-align: center !important;
-            letter-spacing: 0.5px !important; 
-            margin: 0 0 6px 0 !important; 
-            font-size: 13px !important;    /* 👈 크기 */
-            font-weight: 700 !important;   /* 👈 [수정반영] 조금 두껍게(500) 고정 */
-        }
-        
-        /* 2. 작품 설명 및 사이즈(Description) 디자인 조절 */
-        .item-desc { 
-            font-family: "Noto Serif Oriya", serif !important; 
-            color: #4a4949 !important;     /* 👈 [수정반영] 더 명확한 어두운 색상 고정 */
-            text-align: center !important;
-            line-height: 1.5 !important; 
-            margin: 0 !important; 
-            white-space: pre-line !important; 
-            font-size: 11px !important;    /* 👈 크기 */
-            font-weight: 600 !important;   /* 👈 [수정반영] 보통 두께(400) 고정 */
-        }
-
-        /* ======================================================== */
-        /* 아래는 건드리지 않아도 되는 전체 홈페이지 뼈대 레이아웃입니다 */
-        /* ======================================================== */
-
         /* 첫 화면 사진 목록 정렬 (3열 바둑판 고정) */
         .gallery {
             display: grid !important;
-            /* 3×3 형태를 깔끔하게 유지하기 위해 한 줄에 무조건 3장씩 배치 */
             grid-template-columns: repeat(3, 1fr) !important;
             gap: 40px !important;
             max-width: 1000px !important;
@@ -54,20 +22,42 @@
             padding: 20px 0 !important;
         }
 
-        /* 모바일 화면 배려 (화면이 너무 좁아지면 가로 1열로 부드럽게 전환) */
         @media (max-width: 768px) {
             .gallery { grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)) !important; }
         }
 
         /* 개별 사진+텍스트 카드 세트 */
         .gallery-container {
-            display: none; /* 💡 [핵심] 처음에는 모두 숨겨두고 자바스크립트로 9장씩 켭니다 */
+            display: none; 
             flex-direction: column !important;
             align-items: center !important;
             text-align: center !important;
         }
 
-        /* 더보기 버튼 디자인 (아주 미니멀하고 세련된 미술관 갤러리 스타일) */
+        /* 1. 작품 제목(Title) 디자인 */
+        .item-title { 
+            font-family: "Noto Serif Oriya", serif !important; 
+            color: #4a4949 !important; 
+            text-align: center !important;
+            letter-spacing: 0.5px !important; 
+            margin: 0 0 6px 0 !important; 
+            font-size: 13px !important;    
+            font-weight: 500 !important;   
+        }
+        
+        /* 2. 작품 설명 및 사이즈(Description) 디자인 */
+        .item-desc { 
+            font-family: "Noto Serif Oriya", serif !important; 
+            color: #4a4949 !important;     
+            text-align: center !important;
+            line-height: 1.5 !important; 
+            margin: 0 !important; 
+            white-space: pre-line !important; 
+            font-size: 11px !important;    
+            font-weight: 400 !important;   
+        }
+
+        /* 더보기 버튼 디자인 */
         .more-btn-container {
             text-align: center;
             margin: 50px 0 80px 0;
@@ -103,22 +93,97 @@
         .gallery-item:hover { transform: translateY(-4px) !important; }
         .gallery-item img { width: 100% !important; height: 100% !important; object-fit: cover !important; display: block !important; }
 
-        .item-title { font-size: 14px !important; font-weight: 300 !important; color: #4a4949 !important; margin: 0 0 6px 0 !important; letter-spacing: 0.5px !important; font-family: "Noto Serif Oriya", serif !important; }
-        .item-desc { font-size: 11px !important; font-weight: 300 !important; color: #777777 !important; line-height: 1.5 !important; margin: 0 !important; white-space: pre-line !important; font-family: "Noto Serif Oriya", serif !important; }
+        /* 🖤 모서리 완벽한 직각 및 아담한 크기의 팝업창 박스 */
+        .custom-lightbox { 
+            display: none; 
+            position: fixed !important; 
+            top: 50% !important; 
+            left: 50% !important; 
+            transform: translate(-50%, -50%) !important; 
+            
+            width: 90vw !important; 
+            height: 85vh !important; 
+            max-width: 750px !important;  
+            max-height: 650px !important; 
+            
+            background-color: rgba(0, 0, 0, 0.98) !important; 
+            z-index: 999999 !important; 
+            justify-content: center !important; 
+            align-items: center !important; 
+            user-select: none !important;
+            border-radius: 0px !important; 
+            box-shadow: 0 10px 40px rgba(0,0,0,0.6) !important;
+            overflow: hidden !important;   
+        }
 
-        /* 🖤 완벽 차단용 검은색 팝업창 레이아웃 */
-        .custom-lightbox { display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background-color: rgba(0, 0, 0, 0.98); z-index: 999999; justify-content: center; align-items: center; user-select: none; }
-        .lightbox-wrapper { position: relative; max-width: 85vw; max-height: 85vh; display: flex; justify-content: center; align-items: center; transition: transform 0.2s ease; }
-        .custom-lightbox img { max-width: 85vw; max-height: 85vh; width: auto; height: auto; object-fit: contain; display: block; }
-        .lightbox-toolbar { position: absolute; top: 25px; right: 35px; display: flex; align-items: center; gap: 25px; z-index: 100002; }
-        .toolbar-btn { color: #ffffff !important; font-size: 36px !important; cursor: pointer; opacity: 0.8; transition: opacity 0.2s; display: flex; align-items: center; justify-content: center; }
+        /* 🖼️ 사진 액자 공간 */
+        .lightbox-wrapper { 
+            position: relative !important; 
+            width: 90% !important;
+            height: 90% !important;
+            max-width: 90% !important;
+            max-height: 90% !important;
+            display: flex !important; 
+            justify-content: center !important; 
+            align-items: center !important; 
+            transition: transform 0.2s ease-in-out !important; 
+        }
+
+        /* 사진 위에 마우스를 대면 돋보기 모양 커서 생성 */
+        .custom-lightbox img { 
+            max-width: 100% !important; 
+            max-height: 100% !important; 
+            width: auto !important; 
+            height: auto !important; 
+            object-fit: contain !important; 
+            display: block !important; 
+            margin: auto !important;
+            cursor: zoom-in !important; 
+        }
+        
+        /* 이미 확대가 되었을 때는 축소 커서로 자동 변경 */
+        .custom-lightbox.zoomed-mode img {
+            cursor: zoom-out !important; 
+        }
+
+        /* 🔍 상단 우측 툴바 (오직 깔끔한 X 닫기 버튼만 배치) */
+        .lightbox-toolbar { 
+            position: absolute !important; 
+            top: 20px !important; 
+            right: 25px !important; 
+            z-index: 100002 !important; 
+        }
+
+        .toolbar-btn { 
+            color: #ffffff !important; 
+            font-size: 32px !important; 
+            cursor: pointer !important; 
+            opacity: 0.6 !important; 
+            transition: opacity 0.2s !important; 
+        }
         .toolbar-btn:hover { opacity: 1 !important; }
-        .svg-icon { width: 24px; height: 24px; fill: none; stroke: #ffffff; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
-        .nav-btn { position: absolute !important; top: 50% !important; transform: translateY(-50%) !important; cursor: pointer !important; width: 50px !important; height: 80px !important; display: flex !important; align-items: center !important; justify-content: center !important; opacity: 0.4 !important; z-index: 1000001 !important; background-color: transparent !important; border: none !important; transition: opacity 0.2s ease !important; }
+
+        /* ◀ ▶ 이동 화살표 버튼 */
+        .nav-btn { 
+            position: absolute !important; 
+            top: 50% !important; 
+            transform: translateY(-50%) !important; 
+            cursor: pointer !important; 
+            width: 40px !important; 
+            height: 60px !important; 
+            display: flex !important; 
+            align-items: center !important; 
+            justify-content: center !important; 
+            opacity: 0.5 !important; 
+            z-index: 1000001 !important; 
+            background-color: transparent !important; 
+            border: none !important; 
+            transition: opacity 0.2s ease !important; 
+        }
         .nav-btn:hover { opacity: 1 !important; }
-        .prev-btn { left: 30px !important; }
-        .next-btn { right: 30px !important; }
-        .nav-icon { width: 40px; height: 40px; stroke: #ffffff; stroke-width: 1.5; fill: none; stroke-linecap: round; stroke-linejoin: round; }
+        .prev-btn { left: 15px !important; }  
+        .next-btn { right: 15px !important; } 
+        .nav-icon { width: 32px; height: 32px; stroke: #ffffff; stroke-width: 1.5; fill: none; stroke-linecap: round; stroke-linejoin: round; }
     </style>
 </head>
 <body>
@@ -126,20 +191,14 @@
 <!-- 🖼️ 갤러리 메인 영역 -->
 <div id="gallery" class="gallery"></div>
 
-<!-- ➕ [새로 추가] MORE 버튼 영역 -->
+<!-- ➕ MORE 버튼 영역 -->
 <div id="more-btn-area" class="more-btn-container">
     <button class="more-btn" onclick="showNextImages()">More</button>
 </div>
 
-<!-- 🖤 팝업창 및 버튼 영역 -->
+<!-- 🖤 아담하게 크기가 묶인 팝업창 영역 -->
 <div id="custom-lightbox" class="custom-lightbox">
     <div class="lightbox-toolbar">
-        <span class="toolbar-btn" onclick="toggleZoom(event)" id="zoom-btn" title="확대/축소">
-            <svg class="svg-icon" viewBox="0 0 24 24">
-                <circle cx="11" cy="11" r="8"></circle>
-                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-            </svg>
-        </span>
         <span class="toolbar-btn" onclick="closeLightbox()" title="닫기">&times;</span>
     </div>
 
@@ -156,7 +215,7 @@
     </span>
 
     <div id="lightbox-wrapper" class="lightbox-wrapper">
-        <img id="custom-lightbox-img" src="" alt="확대 사진" onclick="event.stopPropagation();">
+        <img id="custom-lightbox-img" src="" alt="확대 사진" onclick="toggleZoom(event)">
     </div>
 </div>
 
@@ -165,7 +224,6 @@
     let currentIndex = 0;
     let isZoomed = false;
     
-    // 💡 MORE 버튼 조종용 변수 (한 번에 9장씩 고정)
     const IMAGES_PER_PAGE = 9; 
     let visibleCount = IMAGES_PER_PAGE;
 
@@ -182,7 +240,7 @@
         galleryData.forEach((item, index) => {
             const containerDiv = document.createElement('div');
             containerDiv.className = 'gallery-container';
-            containerDiv.id = `item-container-${index}`; // 고유 아이디 부여
+            containerDiv.id = `item-container-${index}`;
 
             const itemDiv = document.createElement('div');
             itemDiv.className = 'gallery-item';
@@ -208,101 +266,18 @@
             galleryContainer.appendChild(containerDiv);
         });
 
-        // 처음 켜졌을 때 초기화 렌더링 호출
         updateVisibility();
     }
 
-    // 💡 화면에 몇 장을 보여줄지 실시간 조절하는 함수
+    /* 💡 [정상 연동 가이드] 질문자님이 보셨던 부분부터 끊기지 않고 끝까지 완벽 마감 처리 완료 */
     function updateVisibility() {
         galleryData.forEach((item, index) => {
             const targetElement = document.getElementById(`item-container-${index}`);
             if (targetElement) {
                 if (index < visibleCount) {
-                    targetElement.style.display = 'flex'; // 지정 개수 이하는 보이기
+                    targetElement.style.display = 'flex';
                 } else {
-                    targetElement.style.display = 'none'; // 지정 개수 초과는 숨기기
+                    targetElement.style.display = 'none';
                 }
             }
         });
-
-        // 만약 전체 사진을 다 보여줬다면 MORE 버튼 스스로 숨기기
-        const moreBtnArea = document.getElementById('more-btn-area');
-        if (visibleCount >= galleryData.length) {
-            moreBtnArea.style.display = 'none';
-        } else {
-            moreBtnArea.style.display = 'block';
-        }
-    }
-
-    // 💡 MORE 버튼 누르면 실행되는 함수 (9장 추가)
-    function showNextImages() {
-        visibleCount += IMAGES_PER_PAGE;
-        updateVisibility();
-    }
-
-    function openLightbox(index) {
-        currentIndex = index;
-        isZoomed = false;
-        updateLightbox();
-        document.getElementById('custom-lightbox').style.display = 'flex';
-        document.body.style.overflow = 'hidden';
-    }
-
-    function closeLightbox() {
-        document.getElementById('custom-lightbox').style.display = 'none';
-        document.body.style.overflow = 'auto';
-    }
-
-    function updateLightbox() {
-        const wrapper = document.getElementById('lightbox-wrapper');
-        document.getElementById('custom-lightbox-img').src = galleryData[currentIndex].src;
-        wrapper.style.transform = 'scale(1)';
-        isZoomed = false;
-    }
-
-    function changeImage(direction, event) {
-        if (event) event.stopPropagation();
-        currentIndex += direction;
-        if (currentIndex >= galleryData.length) currentIndex = 0; 
-        if (currentIndex < 0) currentIndex = galleryData.length - 1; 
-        updateLightbox();
-    }
-
-    // 🔍 돋보기 확대/축소 기능
-    function toggleZoom(event) {
-        if (event) event.stopPropagation();
-        const wrapper = document.getElementById('lightbox-wrapper');
-        const lightbox = document.getElementById('custom-lightbox');
-        if (!isZoomed) {
-            wrapper.style.transform = 'scale(1.4)'; 
-            lightbox.style.overflow = 'auto'; 
-            isZoomed = true;
-        } else {
-            wrapper.style.transform = 'scale(1)';
-            lightbox.style.overflow = 'hidden';
-            isZoomed = false;
-        }
-    }
-
-    // ◀ ▶ 키보드 방향키 및 ESC 기능 연동
-    document.addEventListener('keydown', function(e) {
-        if (document.getElementById('custom-lightbox').style.display === 'flex') {
-            if (e.key === 'ArrowRight') changeImage(1);
-            if (e.key === 'ArrowLeft') changeImage(-1);
-            if (e.key === 'Escape') closeLightbox();
-        }
-    });
-
-    // 배경 클릭 시 팝업창 닫기 기능
-    document.getElementById('custom-lightbox').addEventListener('click', function(e) {
-        if (e.target === this || e.target === document.getElementById('lightbox-wrapper')) {
-            closeLightbox();
-        }
-    });
-
-    // 갤러리 최종 실행 단추
-    initGallery();
-</script>
-
-</body>
-</html>

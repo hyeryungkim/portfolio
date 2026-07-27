@@ -108,5 +108,35 @@ const galleryData = [
         src: 'images/021.jpg',
         title: 'AZIT _ Step in shadow 4',
         desc: '24.2 x 24.2 cm\nAcrylic on wood panel'
+    },
+    {
+        src: 'images/022.jpg',
+        title: 'AZIT _  Black shadow 1',
+        desc: '45 x 45 cm\nPorcelain, mixed media on wood panel'
+    },
+    {
+        src: 'images/023.jpg',
+        title: 'AZIT _  Black shadow 1 (Detail)',
+        desc: '45 x 45 cm\nPorcelain, mixed media on wood panel'
+    },
+    {
+        src: 'images/024.jpg',
+        title: 'AZIT _  Black shadow 2',
+        desc: '25 x 25 cm\nAcrylic on wood panel'
+    },
+    {
+        src: 'images/025.jpg',
+        title: 'AZIT _  Black shadow 2 (Detail)',
+        desc: '25 x 25 cm\nPorcelain, mixed media on wood panel'
+    },
+    {
+        src: 'images/025.jpg',
+        title: 'AZIT _  Black shadow 3',
+        desc: '25 x 25 cm\nPorcelain, mixed media on wood panel'
+    },
+    {
+        src: 'images/027.jpg',
+        title: 'AZIT _  Black shadow 4',
+        desc: '25 x 25 cm\nAcrylic on wood panel'
     }
 ];

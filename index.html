@@ -12,6 +12,18 @@
     
     <link rel="stylesheet" href="style.css">
     <style>
+        html, body {
+    margin: 0 !important;
+    padding: 0 !important;
+    overflow-x: hidden !important;
+    overflow-y: auto !important; /* 내부 내용에 따라 부드럽게 연동 */
+}
+
+/* 브라우저 및 구글 프레임의 우측 기본 스크롤바 자체를 투명하게 숨기는 마법의 코드 */
+::-webkit-scrollbar {
+    display: none !important;
+    width: 0 !important;
+}
         /* 첫 화면 사진 목록 정렬 (3열 바둑판 고정) */
         .gallery {
             display: grid !important;
@@ -36,25 +48,25 @@
 
         /* 1. 작품 제목(Title) 디자인 */
         .item-title { 
-            font-family: "Noto Serif Oriya", serif !important; 
+            font-family: "Noto Serif", serif !important; 
             color: #4a4949 !important; 
             text-align: center !important;
             letter-spacing: 0.5px !important; 
             margin: 0 0 6px 0 !important; 
             font-size: 13px !important;    
-            font-weight: 800 !important;   
+            font-weight: 700 !important;   
         }
         
         /* 2. 작품 설명 및 사이즈(Description) 디자인 */
         .item-desc { 
-            font-family: "Noto Serif Oriya", serif !important; 
+            font-family: "Noto Serif", serif !important; 
             color: #4a4949 !important;     
             text-align: center !important;
             line-height: 1.5 !important; 
             margin: 0 !important; 
             white-space: pre-line !important; 
             font-size: 11px !important;    
-            font-weight: 700 !important;   
+            font-weight: 600 !important;   
         }
 
         /* 더보기 버튼 디자인 */

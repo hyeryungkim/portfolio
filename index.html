@@ -4,26 +4,26 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Hyeryung Kim | Portfolio</title>
-
+    
     <!-- 🌐 Noto Serif Oriya 공식 구글 주소 연동 -->
     <link rel="preconnect" href="https://googleapis.com">
     <link rel="preconnect" href="https://gstatic.com" crossorigin>
     <link href="https://googleapis.com/css2?family=Noto+Serif+Oriya:wght@300;400;500;700&display=swap" rel="stylesheet">
-
+    
     <link rel="stylesheet" href="style.css">
     <style>
+        /* 브라우저 및 구글 프레임의 우측 기본 스크롤바 투명 가드 */
         html, body {
-    margin: 0 !important;
-    padding: 0 !important;
-    overflow-x: hidden !important;
-    overflow-y: auto !important; /* 내부 내용에 따라 부드럽게 연동 */
-}
+            margin: 0 !important;
+            padding: 0 !important;
+            overflow-x: hidden !important;
+            overflow-y: auto !important;
+        }
+        ::-webkit-scrollbar {
+            display: none !important;
+            width: 0 !important;
+        }
 
-/* 브라우저 및 구글 프레임의 우측 기본 스크롤바 자체를 투명하게 숨기는 마법의 코드 */
-::-webkit-scrollbar {
-    display: none !important;
-    width: 0 !important;
-}
         /* 첫 화면 사진 목록 정렬 (3열 바둑판 고정) */
         .gallery {
             display: grid !important;
@@ -48,25 +48,25 @@
 
         /* 1. 작품 제목(Title) 디자인 */
         .item-title { 
-            font-family: "Noto Serif", serif !important; 
+            font-family: "Noto Serif Oriya", serif !important; 
             color: #4a4949 !important; 
             text-align: center !important;
             letter-spacing: 0.5px !important; 
             margin: 0 0 6px 0 !important; 
-            font-size: 13px !important;    
-            font-weight: 700 !important;   
+            font-size: 14px !important;    
+            font-weight: 500 !important;   
         }
-
+        
         /* 2. 작품 설명 및 사이즈(Description) 디자인 */
         .item-desc { 
-            font-family: "Noto Serif", serif !important; 
+            font-family: "Noto Serif Oriya", serif !important; 
             color: #4a4949 !important;     
             text-align: center !important;
             line-height: 1.5 !important; 
             margin: 0 !important; 
             white-space: pre-line !important; 
             font-size: 11px !important;    
-            font-weight: 600 !important;   
+            font-weight: 400 !important;   
         }
 
         /* 더보기 버튼 디자인 */
@@ -92,12 +92,13 @@
             color: #ffffff;
         }
 
+        /* 첫 화면 사진 테두리 직각 고정 */
         .gallery-item {
             cursor: pointer !important;
             width: 280px !important;
             height: 280px !important;
             overflow: hidden !important;
-            border-radius: 0px !important;
+            border-radius: 0px !important; 
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06) !important;
             transition: transform 0.2s ease;
             margin-bottom: 15px !important;
@@ -105,30 +106,29 @@
         .gallery-item:hover { transform: translateY(-4px) !important; }
         .gallery-item img { width: 100% !important; height: 100% !important; object-fit: cover !important; display: block !important; }
 
-        /* 🖤 모서리 완벽한 직각 및 아담한 크기의 팝업창 박스 */
+        /* 모서리 직각 및 대폭 확대된 팝업창 박스 고정 */
         .custom-lightbox { 
             display: none; 
             position: fixed !important; 
             top: 50% !important; 
             left: 50% !important; 
             transform: translate(-50%, -50%) !important; 
-
+            
             width: 90vw !important; 
             height: 85vh !important; 
             max-width: 1000px !important;  
             max-height: 800px !important; 
-
+            
             background-color: rgba(0, 0, 0, 0.98) !important; 
             z-index: 999999 !important; 
             justify-content: center !important; 
             align-items: center !important; 
-            user-select: none !important;
             border-radius: 0px !important; 
             box-shadow: 0 10px 40px rgba(0,0,0,0.6) !important;
             overflow: hidden !important;   
         }
 
-        /* 🖼️ 사진 액자 공간 */
+        /* 사진 액자 공간 */
         .lightbox-wrapper { 
             position: relative !important; 
             width: 90% !important;
@@ -141,7 +141,6 @@
             transition: transform 0.2s ease-in-out !important; 
         }
 
-        /* 사진 위에 마우스를 대면 돋보기 모양 커서 생성 */
         .custom-lightbox img { 
             max-width: 100% !important; 
             max-height: 100% !important; 
@@ -150,32 +149,30 @@
             object-fit: contain !important; 
             display: block !important; 
             margin: auto !important;
-            cursor: zoom-in !important; 
         }
 
-        /* 이미 확대가 되었을 때는 축소 커서로 자동 변경 */
-        .custom-lightbox.zoomed-mode img {
-            cursor: zoom-out !important; 
-        }
-
-        /* 🔍 상단 우측 툴바 (오직 깔끔한 X 닫기 버튼만 배치) */
+        /* 상단 우측 미니멀 툴바 배치실 */
         .lightbox-toolbar { 
             position: absolute !important; 
-            top: 20px !important; 
-            right: 25px !important; 
+            top: 25px !important; 
+            right: 35px !important; 
+            display: flex !important;
+            align-items: center !important;
+            gap: 25px !important; 
             z-index: 100002 !important; 
+            user-select: none !important;
         }
 
         .toolbar-btn { 
             color: #ffffff !important; 
             font-size: 32px !important; 
             cursor: pointer !important; 
-            opacity: 0.6 !important; 
+            opacity: 0.5 !important; 
             transition: opacity 0.2s !important; 
         }
         .toolbar-btn:hover { opacity: 1 !important; }
 
-        /* ◀ ▶ 이동 화살표 버튼 */
+        /* ◀ ▶ 이동 화살표 버튼 위치 및 크기 */
         .nav-btn { 
             position: absolute !important; 
             top: 50% !important; 
@@ -186,7 +183,7 @@
             display: flex !important; 
             align-items: center !important; 
             justify-content: center !important; 
-            opacity: 0.5 !important; 
+            opacity: 0.3 !important; 
             z-index: 1000001 !important; 
             background-color: transparent !important; 
             border: none !important; 
@@ -208,7 +205,7 @@
     <button class="more-btn" onclick="showNextImages()">More</button>
 </div>
 
-<!-- 🖤 아담하게 크기가 묶인 팝업창 영역 -->
+<!-- 🖤 완성형 팝업 제어 공간 -->
 <div id="custom-lightbox" class="custom-lightbox">
     <div class="lightbox-toolbar">
         <span class="toolbar-btn" onclick="closeLightbox()" title="닫기">&times;</span>
@@ -227,7 +224,7 @@
     </span>
 
     <div id="lightbox-wrapper" class="lightbox-wrapper">
-        <img id="custom-lightbox-img" src="" alt="확대 사진" onclick="toggleZoom(event)">
+        <img id="custom-lightbox-img" src="" alt="확대 사진">
     </div>
 </div>
 
@@ -235,16 +232,10 @@
 <script>
     let currentIndex = 0;
     let isZoomed = false;
-
+    
     const IMAGES_PER_PAGE = 9; 
     let visibleCount = IMAGES_PER_PAGE;
 
-    // 🎹 키보드 상태 실시간 감지 변수들
-    let isSpacePressed = false;
-    let isCtrlPressed = false;
-    let isAltPressed = false;
-
-    // 🖱️ 드래그 앤 팬 이동 관련 변수들
     let isDragging = false;
     let startX, startY, scrollLeft, scrollTop;
     const lightbox = document.getElementById('custom-lightbox');
@@ -269,11 +260,11 @@
             const itemDiv = document.createElement('div');
             itemDiv.className = 'gallery-item';
             itemDiv.setAttribute('onclick', `openLightbox(${index})`);
-
+            
             const imgTag = document.createElement('img');
             imgTag.src = item.src;
             imgTag.alt = item.title;
-
+            
             itemDiv.appendChild(imgTag);
             containerDiv.appendChild(itemDiv);
 
@@ -293,234 +284,138 @@
         updateVisibility();
     }
 
-    /* 💡 [정상 연동 가이드] 질문자님이 보셨던 부분부터 끊기지 않고 끝까지 완벽 마감 처리 완료 */
-    function updateVisibility() {
-        galleryData.forEach((item, index) => {
-            const targetElement = document.getElementById(`item-container-${index}`);
-            if (targetElement) {
-                if (index < visibleCount) {
-                    targetElement.style.display = 'flex';
-                } else {
-                    targetElement.style.display = 'none';
+// 💡 [여기서부터 복사해서 맨 밑에 이어서 붙여넣으세요]
+        function updateVisibility() {
+            galleryData.forEach((item, index) => {
+                const targetElement = document.getElementById(`item-container-${index}`);
+                if (targetElement) {
+                    if (index < visibleCount) {
+                        targetElement.style.display = 'flex';
+                    } else {
+                        targetElement.style.display = 'none';
+                    }
                 }
+            });
+
+            const moreBtnArea = document.getElementById('more-btn-area');
+            if (visibleCount >= galleryData.length) {
+                moreBtnArea.style.display = 'none';
+            } else {
+                moreBtnArea.style.display = 'block';
             }
-        });
-        // 💡 [여기서부터 복사하세요] 전체 사진을 다 보여줬다면 MORE 버튼 스스로 숨기기
-
-        const moreBtnArea = document.getElementById('more-btn-area');
-        if (visibleCount >= galleryData.length) {
-            moreBtnArea.style.display = 'none';
-        } else {
-            moreBtnArea.style.display = 'block';
         }
-    }
 
-    // 💡 MORE 버튼 누르면 실행되는 함수 (9장 추가)
-    function showNextImages() {
-        visibleCount += IMAGES_PER_PAGE;
-        updateVisibility();
-    }
+        function showNextImages() {
+            visibleCount += IMAGES_PER_PAGE;
+            updateVisibility();
+        }
 
-    function openLightbox(index) {
-        currentIndex = index;
-        isZoomed = false;
-        updateLightbox();
-        document.getElementById('custom-lightbox').style.display = 'flex';
-        lightbox.style.display = 'flex';
-        document.body.style.overflow = 'hidden';
-    }
-
-    function closeLightbox() {
-        document.getElementById('custom-lightbox').style.display = 'none';
-        lightbox.style.display = 'none';
-        document.body.style.overflow = 'auto';
-        resetKeyStates();
-    }
-
-    function updateLightbox() {
-        const wrapper = document.getElementById('lightbox-wrapper');
-        const lightbox = document.getElementById('custom-lightbox');
-        document.getElementById('custom-lightbox-img').src = galleryData[currentIndex].src;
-        lightboxImg.src = galleryData[currentIndex].src;
-        wrapper.style.transform = 'scale(1)';
-        lightbox.classList.remove('zoomed-mode');
-        lightbox.style.overflow = 'hidden'; 
-        isZoomed = false;
-        updateCursor();
-    }
-
-    function changeImage(direction, event) {
-        if (event) event.stopPropagation();
-        currentIndex += direction;
-        if (currentIndex >= galleryData.length) currentIndex = 0; 
-        if (currentIndex < 0) currentIndex = galleryData.length - 1; 
-        updateLightbox();
-    }
-
-    // 🔍 사진 본체를 다이렉트로 터치/클릭하면 300% 늘어나는 심플 마술 장치
-    function toggleZoom(event) {
-        if (event) event.stopPropagation();
-        const wrapper = document.getElementById('lightbox-wrapper');
-        const lightbox = document.getElementById('custom-lightbox');
-        if (!isZoomed) {
-            wrapper.style.transform = 'scale(3.0)'; 
-            lightbox.classList.add('zoomed-mode'); 
-            lightbox.style.overflow = 'auto';      
-            isZoomed = true;
-    // 🔍 마우스 스타일 커서 상황별 강제 조립 장치
-    function updateCursor() {
-        if (lightbox.style.display !== 'flex') return;
-        
-        if (isSpacePressed) {
-            lightbox.style.cursor = isDragging ? 'grabbing' : 'grab'; // ✋ 스페이스바 = 손바닥 모드 고정
-            lightboxImg.style.cursor = isDragging ? 'grabbing' : 'grab';
-        } else if (isCtrlPressed) {
-            lightbox.style.cursor = 'zoom-in';  // 🔍+ 컨트롤 = 확대 모드
-            lightboxImg.style.cursor = 'zoom-in';
-        } else if (isAltPressed) {
-            lightbox.style.cursor = 'zoom-out'; // 🔍- 알트 = 축소 모드
-            lightboxImg.style.cursor = 'zoom-out';
-        } else {
-            wrapper.style.transform = 'scale(1)';
-            lightbox.classList.remove('zoomed-mode'); 
-            lightbox.style.overflow = 'hidden';
+        function openLightbox(index) {
+            currentIndex = index;
             isZoomed = false;
-            lightbox.style.cursor = 'pointer';  // 아무것도 안 누르면 그냥 일반 클릭 닫기 포인터
-            lightboxImg.style.cursor = 'pointer';
+            updateLightbox();
+            lightbox.style.display = 'flex';
+            document.body.style.overflow = 'hidden';
         }
-    }
 
-    // 키보드 제어 시스템
-    function resetKeyStates() {
-        isSpacePressed = false; isCtrlPressed = false; isAltPressed = false; isDragging = false;
-        updateCursor();
-    }
+        function closeLightbox() {
+            lightbox.style.display = 'none';
+            document.body.style.overflow = 'auto';
+        }
 
-    // 🎹 키보드를 누르는 순간 감지 엔진
-    document.addEventListener('keydown', function(e) {
-        if (document.getElementById('custom-lightbox').style.display === 'flex') {
+        function updateLightbox() {
+            lightboxImg.src = galleryData[currentIndex].src;
+            wrapper.style.transform = 'scale(1)';
+            lightbox.style.overflow = 'hidden'; 
+            isZoomed = false;
+            updateCursorStatus(false); 
+        }
+
+        function changeImage(direction, event) {
+            if (event) event.stopPropagation();
+            currentIndex += direction;
+            if (currentIndex >= galleryData.length) currentIndex = 0; 
+            if (currentIndex < 0) currentIndex = galleryData.length - 1; 
+            updateLightbox();
+        }
+
+        // 🔍 실시간 돋보기 커서(+ / -) 스위칭 빌더
+        function updateCursorStatus(altActive) {
+            if (altActive) {
+                lightboxImg.style.cursor = 'zoom-out';
+            } else {
+                lightboxImg.style.cursor = isZoomed ? 'zoom-out' : 'zoom-in';
+            }
+        }
+
+        // 🎹 Alt 키 입력 감지 이벤트 룸
+        window.addEventListener('keydown', (e) => {
+            if (lightbox.style.display !== 'flex') return;
+            if (e.key === 'Alt') {
+                e.preventDefault(); 
+                updateCursorStatus(true);
+            }
+            
             if (e.key === 'ArrowRight') changeImage(1);
             if (e.key === 'ArrowLeft') changeImage(-1);
             if (e.key === 'Escape') closeLightbox();
-        if (lightbox.style.display !== 'flex') return;
+        });
 
-        if (e.code === 'Space') {
-            isSpacePressed = true;
-            e.preventDefault(); // 스페이스바 눌렀을 때 임베드 창 스크롤 방지
-            updateCursor();
-        }
-        if (e.key === 'Control') { isCtrlPressed = true; updateCursor(); }
-        if (e.key === 'Alt') { isAltPressed = true; updateCursor(); }
+        window.addEventListener('keyup', (e) => {
+            if (e.key === 'Alt') {
+                updateCursorStatus(false);
+            }
+        });
 
-        // 방향키 및 ESC 연동
-        if (e.key === 'ArrowRight') changeImage(1);
-        if (e.key === 'ArrowLeft') changeImage(-1);
-        if (e.key === 'Escape') closeLightbox();
-    });
+        // 🖱️ 클릭 클릭 확대/축소 제어기
+        lightboxImg.addEventListener('click', (e) => {
+            e.stopPropagation(); 
 
-    // 배경 클릭 시 팝업 닫기
-    document.getElementById('custom-lightbox').addEventListener('click', function(e) {
-    closeLightbox();
-});
-    // 🎹 키보드에서 손을 떼는 순간 감지 엔진
-    document.addEventListener('keyup', function(e) {
-        if (e.code === 'Space') { isSpacePressed = false; updateCursor(); }
-        if (e.key === 'Control') { isCtrlPressed = false; updateCursor(); }
-        if (e.key === 'Alt') { isAltPressed = false; updateCursor(); }
-    });
+            if (e.altKey) {
+                if (isZoomed) {
+                    wrapper.style.transform = 'scale(1)';
+                    lightbox.style.overflow = 'hidden';
+                    isZoomed = false;
+                    updateCursorStatus(false);
+                }
+            } 
+            else {
+                if (!isZoomed) {
+                    wrapper.style.transform = 'scale(3.0)'; 
+                    lightbox.style.overflow = 'auto'; 
+                    isZoomed = true;
+                    updateCursorStatus(false);
+                }
+            }
+        });
 
-    // 🖼️ [🔥 새로 추가할 드래그 감상 시스템] 
-    // 300% 확대된 사진을 마우스로 잡고 이리저리 끌어서 구석구석 감상하는 기능입니다.
-    let isDragging = false;
-    let startX, startY, scrollLeft, scrollTop;
-    const lightbox = document.getElementById('custom-lightbox');
-    // 🖱️ 큰 팝업창 영역 통합 클릭 감지기
-    lightbox.addEventListener('click', function(e) {
-        // 화살표 버튼을 누른 게 아닐 때만 작동
-        if (e.target.closest('.nav-btn')) return;
+        // ❌ 사진 밖 검은색 뒷배경 여백을 클릭하면 창 닫기
+        lightbox.addEventListener('click', function(e) {
+            if (e.target === this || e.target === wrapper) {
+                closeLightbox();
+            }
+        });
 
-    // 마우스를 꾹 눌렀을 때 (드래그 시작)
-        if (isCtrlPressed) {
-            // 🔥 Ctrl + 클릭 = 300% 확대 기동
-            wrapper.style.transform = 'scale(3.0)';
-            lightbox.style.overflow = 'auto';
-            isZoomed = true;
-        } else if (isAltPressed) {
-            // 🔥 Alt + 클릭 = 100% 원래 크기로 축소
-            wrapper.style.transform = 'scale(1.4)'; /* 아담한 기본 액자 비율선 유지 */
-            lightbox.style.overflow = 'hidden';
-            isZoomed = false;
-        } else if (!isSpacePressed) {
-            // 🔥 아무 단축키도 안 누르고 그냥 클릭 = 즉시 팝업 닫기
-            closeLightbox();
-        }
-    });
+        // 안전 모바일 터치 트래킹 시스템 내장
+        lightbox.addEventListener('touchstart', (e) => {
+            if (!isZoomed) return;
+            isDragging = true;
+            startX = e.touches[0].pageX - lightbox.offsetLeft;
+            startY = e.touches[0].pageY - lightbox.offsetTop;
+            scrollLeft = lightbox.scrollLeft;
+            scrollTop = lightbox.scrollTop;
+        }, { passive: true });
+        lightbox.addEventListener('touchend', () => { isDragging = false; });
+        lightbox.addEventListener('touchmove', (e) => {
+            if (!isDragging) return;
+            const x = e.touches[0].pageX - lightbox.offsetLeft;
+            const y = e.touches[0].pageY - lightbox.offsetTop;
+            lightbox.scrollLeft = scrollLeft - (x - startX) * 1.5;
+            lightbox.scrollTop = scrollTop - (y - startY) * 1.5;
+        }, { passive: true });
 
-    // ✋ [스페이스바용] 마우스 드래그 앤 팬 시스템 기동
-    lightbox.addEventListener('mousedown', (e) => {
-        if (!isZoomed) return; // 확대된 상태에서만 작동하도록 가드
-        if (!isSpacePressed || !isZoomed) return; // 스페이스바를 누르고 확대 상태일 때만 드래그 가동
-        isDragging = true;
-        lightbox.style.cursor = 'grabbing'; // 손바닥 꽉 쥔 모양 커서
-        updateCursor();
-        startX = e.pageX - lightbox.offsetLeft;
-        startY = e.pageY - lightbox.offsetTop;
-        scrollLeft = lightbox.scrollLeft;
-        scrollTop = lightbox.scrollTop;
-        e.preventDefault(); // 사진이 웹브라우저 기본 고스트 이미지로 복사되는 버그 방지
-        e.preventDefault();
-    });
-
-    // 마우스를 떼거나 검은창 바깥으로 나갔을 때 (드래그 종료)
-    lightbox.addEventListener('mouseleave', () => { isDragging = false; lightbox.style.cursor = isZoomed ? 'zoom-out' : 'zoom-in'; });
-    lightbox.addEventListener('mouseup', () => { isDragging = false; lightbox.style.cursor = isZoomed ? 'zoom-out' : 'zoom-in'; });
-
-    // 마우스를 움직일 때 (이리저리 사진 밀기 실행)
-    lightbox.addEventListener('mousemove', (e) => {
-        if (!isDragging) return;
-        e.preventDefault();
-        const x = e.pageX - lightbox.offsetLeft;
-        const y = e.pageY - lightbox.offsetTop;
-        const walkX = (x - startX) * 1.5; // 1.5배 속도로 민첩하게 이동
-        const walkX = (x - startX) * 1.5; // 드래그 감도 조절
-        const walkY = (y - startY) * 1.5;
-        lightbox.scrollLeft = scrollLeft - walkX;
-        lightbox.scrollTop = scrollTop - walkY;
-    });
-
-    // 스마트폰/태블릿 터치 스크린 대응 (손가락으로 부드럽게 밀기)
-    lightbox.addEventListener('mouseup', () => { if (isDragging) { isDragging = false; updateCursor(); } });
-    lightbox.addEventListener('mouseleave', () => { if (isDragging) { isDragging = false; updateCursor(); } });
-
-    // 스마트폰 터치 연동 가드
-    lightbox.addEventListener('touchstart', (e) => {
-        if (!isZoomed) return;
-        isDragging = true;
-        startX = e.touches[0].pageX - lightbox.offsetLeft;
-        startY = e.touches[0].pageY - lightbox.offsetTop;
-        scrollLeft = lightbox.scrollLeft;
-        scrollTop = lightbox.scrollTop;
-    }, { passive: true });
-
-    lightbox.addEventListener('touchend', () => { isDragging = false; });
-
-    lightbox.addEventListener('touchmove', (e) => {
-        if (!isDragging) return;
-        const x = e.touches[0].pageX - lightbox.offsetLeft;
-        const y = e.touches[0].pageY - lightbox.offsetTop;
-        const walkX = (x - startX) * 1.5;
-        const walkY = (y - startY) * 1.5;
-        lightbox.scrollLeft = scrollLeft - walkX;
-        lightbox.scrollTop = scrollTop - walkY;
-        lightbox.scrollLeft = scrollLeft - (x - startX) * 1.5;
-        lightbox.scrollTop = scrollTop - (y - startY) * 1.5;
-    }, { passive: true });
-    // 전체 시스템 기동 단추
-
-    // 전용 브라우저 이탈 방지 가드 (창 밖으로 마우스가 튀었을 때 키보드 먹통 현상 백업)
-    window.addEventListener('blur', resetKeyStates);
-
-    initGallery();
+        // 시스템 가동
+        initGallery();
 </script>
 
 </body>

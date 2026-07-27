@@ -122,7 +122,7 @@ const galleryData = [
     {
         src: 'images/024.jpg',
         title: 'AZIT _  Black shadow 2',
-        desc: '25 x 25 cm\nAcrylic on wood panel'
+        desc: '25 x 25 cm\nPorcelain, mixed media on wood panel'
     },
     {
         src: 'images/025.jpg',
@@ -137,7 +137,7 @@ const galleryData = [
     {
         src: 'images/027.jpg',
         title: 'AZIT _  Black shadow 4',
-        desc: '25 x 25 cm\nAcrylic on wood panel'
+        desc: '25 x 25 cm\nPorcelain, mixed media on wood panel'
     },
     {
         src: 'images/028.jpg',
@@ -206,12 +206,42 @@ const galleryData = [
     },
     {
         src: 'images/041.jpg',
+        title: 'AZIT _ Echo of shadow 2',
+        desc: '24.2 x 40.9 cm\nPorcelain, mixed media on wood panel'
+    },
+    {
+        src: 'images/042.jpg',
+        title: 'AZIT _ Echo of shadow 2 (Detail)',
+        desc: '24.2 x 40.9 cm\nPorcelain, mixed media on wood panel'
+    },
+    {
+        src: 'images/043.jpg',
+        title: 'AZIT _ Echo of shadow 1',
+        desc: '31.8 x 31.8 cm\nPorcelain, mixed media on wood panel'
+    },
+    {
+        src: 'images/044.jpg',
+        title: 'AZIT _ Echo of shadow 1 (Detail)',
+        desc: '31.8 x 31.8 cm\nPorcelain, mixed media on wood panel'
+    },
+    {
+        src: 'images/045.jpg',
         title: 'AZIT _ Echo of shadow 4',
         desc: '30 x 30 cm\nPorcelain, mixed media on wood panel'
     },
     {
-        src: 'images/042.jpg',
-        title: 'AZIT _ Echo of shadow 4 (Detail)',
-        desc: '30 x 30 cm\nPorcelain, mixed media on wood panel'
+        src: 'images/046.jpg',
+        title: 'AZIT _ Pick me 1',
+        desc: '27.3 x 27.3 cm\nPorcelain, mixed media on wood panel'
+    },
+    {
+        src: 'images/047.jpg',
+        title: 'AZIT _ Pick me 1 (Detail)',
+        desc: '27.3 x 27.3 cm\nPorcelain, mixed media on wood panel'
+    },
+    {
+        src: 'images/048.jpg',
+        title: 'AZIT _ Pick me 2',
+        desc: '27.3 x 27.3 cm\nPorcelain, mixed media on wood panel'
     }
 ];

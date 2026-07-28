@@ -328,46 +328,54 @@
                 updateCursorStatus(false);
             }
         });
-       // ✨ 이 코드로 바꾸어 넣으세요! (알트 없이 그냥 클릭으로 확대/축소 무한 반복)
+      // ✨ 삭제한 자리에 이 코드를 그대로 붙여넣으세요
+
+// 1. 클릭 시 300% 확대/축소 무한 토글 및 커서 동기화
 lightboxImg.addEventListener('click', (e) => {
     e.stopPropagation(); // 배경 클릭 꺼짐 현상 방지 가드
+    
     if (isZoomed) {
-        // 1. 이미 확대된 상태라면? ➡ 그냥 클릭 시 원래대로 '축소'
+        // 이미 확대된 상태라면 원래 크기로 축소
         wrapper.style.transform = 'scale(1)';
         lightbox.style.overflow = 'hidden';
         isZoomed = false;
-        updateCursorStatus(false);
+        updateCursorStatus(false); // 축소되었으므로 돋보기(+) 모양으로 전환
     } else {
-        // 2. 축소된 상태라면? ➡ 그냥 클릭 시 300% 대형 '확대'
+        // 축소된 상태라면 300% 대형 확대
         wrapper.style.transform = 'scale(3.0)';
         lightbox.style.overflow = 'auto';
         isZoomed = true;
-        updateCursorStatus(false);
+        updateCursorStatus(false); // 확대되었으므로 돋보기(-) 모양으로 전환
     }
 });
-        // ❌ 사진 밖 검은색 뒷배경 여백을 클릭하면 창 닫기
-        lightbox.addEventListener('click', function(e) {
-            if (e.target === this || e.target === wrapper) {
-                closeLightbox();
-            }
-        });
-        // 안전 모바일 터치 트래킹 시스템 내장
-        lightbox.addEventListener('touchstart', (e) => {
-            if (!isZoomed) return;
-            isDragging = true;
-            startX = e.touches[0].pageX - lightbox.offsetLeft;
-            startY = e.touches[0].pageY - lightbox.offsetTop;
-            scrollLeft = lightbox.scrollLeft;
-            scrollTop = lightbox.scrollTop;
-        }, { passive: true });
-        lightbox.addEventListener('touchend', () => { isDragging = false; });
-        lightbox.addEventListener('touchmove', (e) => {
-            if (!isDragging) return;
-            const x = e.touches[0].pageX - lightbox.offsetLeft;
-            const y = e.touches[0].pageY - lightbox.offsetTop;
-            lightbox.scrollLeft = scrollLeft - (x - startX) * 1.5;
-            lightbox.scrollTop = scrollTop - (y - startY) * 1.5;
-        }, { passive: true });
-        // 시스템 가동
-        initGallery();
+
+// 2. 사진 밖 검은색 뒷배경 여백을 클릭하면 창 닫기
+lightbox.addEventListener('click', function(e) {
+    if (e.target === this || e.target === wrapper) {
+        closeLightbox();
+    }
+});
+
+// 3. 모바일 터치 드래그 이동 시스템
+lightbox.addEventListener('touchstart', (e) => {
+    if (!isZoomed) return;
+    isDragging = true;
+    startX = e.touches[0].pageX - lightbox.offsetLeft;
+    startY = e.touches[0].pageY - lightbox.offsetTop;
+    scrollLeft = lightbox.scrollLeft;
+    scrollTop = lightbox.scrollTop;
+}, { passive: true });
+
+lightbox.addEventListener('touchend', () => { isDragging = false; });
+
+lightbox.addEventListener('touchmove', (e) => {
+    if (!isDragging) return;
+    const x = e.touches[0].pageX - lightbox.offsetLeft;
+    const y = e.touches[0].pageY - lightbox.offsetTop;
+    lightbox.scrollLeft = scrollLeft - (x - startX) * 1.5;
+    lightbox.scrollTop = scrollTop - (y - startY) * 1.5;
+}, { passive: true });
+
+// 4. 시스템 가동 및 초기화
+initGallery();
 </script>

@@ -12,17 +12,39 @@
     
     <link rel="stylesheet" href="style.css">
     <style>
-        /* 브라우저 및 구글 프레임의 우측 기본 스크롤바 투명 가드 */
-        html, body {
-            margin: 0 !important;
-            padding: 0 !important;
-            overflow-x: hidden !important;
-            overflow-y: auto !important;
-        }
-        ::-webkit-scrollbar {
-            display: none !important;
-            width: 0 !important;
-        }
+  /* ======================================================= */
+/* ✍ [여기서 스크롤바 디자인을 은은하고 세련되게 조절하세요] */
+/* ======================================================== */
+
+/* 브라우저 및 구글 프레임의 우측 기본 스크롤바 가드 */
+html, body {
+    margin: 0 !important;
+    padding: 0 !important;
+    overflow-x: hidden !important; /* 가로 스크롤은 완벽 차단 */
+    overflow-y: auto !important;   /* 세로 내용이 많아지면 자동으로 스크롤 생성 */
+}
+
+/* 1. 세로 스크롤바 전체 가로 두께 (가늘고 슬림하게 조율) */
+::-webkit-scrollbar {
+    width: 6px !important; /* 👈 숫자를 4px로 낮추면 더 가늘어지고, 8px로 올리면 더 두꺼워집니다 */
+    display: block !important; /* 숨김 해제 */
+}
+
+/* 2. 스크롤바 움직이는 막대(바) 디자인 */
+::-webkit-scrollbar-thumb {
+    background-color: rgba(0, 0, 0, 0.15) !important; /* 👈 은은하고 연한 반투명 검은색 (0.15 = 15% 투명도) */
+    border-radius: 10px !important; /* 막대 모서리를 둥글게 깎아 부드럽게 처리 */
+}
+
+/* 3. 마우스를 스크롤바 막대 위에 올렸을 때 (살짝 더 진해지는 효과) */
+::-webkit-scrollbar-thumb:hover {
+    background-color: rgba(0, 0, 0, 0.3) !important; /* 마우스 대면 30% 투명도로 약간 더 선명해짐 */
+}
+
+/* 4. 스크롤바가 지나다니는 뒤쪽 배경 레일 (완전 투명 처리하여 깔끔함 유지) */
+::-webkit-scrollbar-track {
+    background: transparent !important;
+}
         /* 첫 화면 사진 목록 정렬 (3열 바둑판 고정) */
         .gallery {
             display: grid !important;

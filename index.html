@@ -61,7 +61,7 @@
             line-height: 1.5 !important; 
             margin: 0 !important; 
             white-space: pre-line !important; 
-            font-size: 11px !important;    
+            font-size: 12px !important;    
             font-weight: 600 !important;   
         }
         /* 더보기 버튼 디자인 */
@@ -345,36 +345,29 @@ lightboxImg.addEventListener('click', (e) => {
         updateCursorStatus(false);
     }
 });
-        // 💡 [여기서부터 복사하세요] 
-        // 윈도우(모니터 전체 화면) 어디를 클릭하든 무조건 팝업창이 즉시 꺼지는 강력 전 전역 차단 장치!
-        window.addEventListener('click', function(e) {
-            // 단, 첫 화면에서 썸네일 사진을 누를 때 팝업창이 뜨자마자 바로 꺼지는 현상을 막기 위해 
-            // 갤러리 아이템을 클릭했을 때만 예외 가드를 작동시킵니다.
-            if (e.target.closest('.gallery-item')) return;
-            
-            closeLightbox();
-        }, true); // true를 붙여서 그 어떤 클릭 신호보다 최우선으로 실행하게 가드합니다.
-        // 안전 모바일 터치 트래킹 시스템 내장 (삭제되지 않고 안전하게 보존 완료)
+        // ❌ 사진 밖 검은색 뒷배경 여백을 클릭하면 창 닫기
+        lightbox.addEventListener('click', function(e) {
+            if (e.target === this || e.target === wrapper) {
+                closeLightbox();
+            }
+        });
+        // 안전 모바일 터치 트래킹 시스템 내장
         lightbox.addEventListener('touchstart', (e) => {
             if (!isZoomed) return;
             isDragging = true;
-            startX = e.touches.pageX - lightbox.offsetLeft;
-            startY = e.touches.pageY - lightbox.offsetTop;
+            startX = e.touches[0].pageX - lightbox.offsetLeft;
+            startY = e.touches[0].pageY - lightbox.offsetTop;
             scrollLeft = lightbox.scrollLeft;
             scrollTop = lightbox.scrollTop;
         }, { passive: true });
-        
-        lightbox.addEventListener('touchend', () => { 
-            isDragging = false; 
-        });
-        
+        lightbox.addEventListener('touchend', () => { isDragging = false; });
         lightbox.addEventListener('touchmove', (e) => {
             if (!isDragging) return;
-            const x = e.touches.pageX - lightbox.offsetLeft;
-            const y = e.touches.pageY - lightbox.offsetTop;
+            const x = e.touches[0].pageX - lightbox.offsetLeft;
+            const y = e.touches[0].pageY - lightbox.offsetTop;
             lightbox.scrollLeft = scrollLeft - (x - startX) * 1.5;
             lightbox.scrollTop = scrollTop - (y - startY) * 1.5;
         }, { passive: true });
-        // 시스템 가동 단추 안전 보존 완료
+        // 시스템 가동
         initGallery();
 </script>

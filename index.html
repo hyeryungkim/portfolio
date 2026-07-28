@@ -216,7 +216,9 @@
     // ✨ 스페이스+드래그 팬(pan) 상태 변수
     let isSpacePressed = false;
     let isPanning = false;
-    let panStartX, panStartY, panScrollLeft, panScrollTop;
+    let panX = 0, panY = 0; // 현재 이미지가 이동된 좌표(px)
+    let panStartMouseX, panStartMouseY, panStartX, panStartY;
+    const ZOOM_SCALE = 3.0;
     
     const IMAGES_PER_PAGE = 9; 
     let visibleCount = IMAGES_PER_PAGE;
@@ -295,7 +297,8 @@
         }
         function updateLightbox() {
             lightboxImg.src = galleryData[currentIndex].src;
-            wrapper.style.transform = 'scale(1)';
+            panX = 0; panY = 0;
+            wrapper.style.transform = 'translate(0px, 0px) scale(1)';
             lightbox.style.overflow = 'hidden'; 
             isZoomed = false;
             updateCursorStatus(false); 
@@ -351,37 +354,52 @@ lightboxImg.addEventListener('click', (e) => {
     if (isSpacePressed) return; // 팬 모드 중 클릭은 확대/축소 무시
     if (isZoomed) {
         // 1. 이미 확대된 상태라면? ➡ 그냥 클릭 시 원래대로 '축소'
-        wrapper.style.transform = 'scale(1)';
+        panX = 0; panY = 0;
+        wrapper.style.transform = 'translate(0px, 0px) scale(1)';
         lightbox.style.overflow = 'hidden';
         isZoomed = false;
         updateCursorStatus(false);
     } else {
         // 2. 축소된 상태라면? ➡ 그냥 클릭 시 300% 대형 '확대'
-        wrapper.style.transform = 'scale(3.0)';
-        lightbox.style.overflow = 'auto';
+        panX = 0; panY = 0;
+        wrapper.style.transform = `translate(0px, 0px) scale(${ZOOM_SCALE})`;
+        lightbox.style.overflow = 'hidden';
         isZoomed = true;
         updateCursorStatus(false);
     }
 });
-        // 🖱 스페이스+드래그로 사진 곳곳 보기 (데스크톱)
+        // 🖱 스페이스+드래그로 사진 곳곳 보기 (데스크톱) — translate 기반, 4방향 모두 이동
         lightboxImg.addEventListener('mousedown', (e) => {
             if (!isSpacePressed || !isZoomed) return;
             e.preventDefault();
             isPanning = true;
-            panStartX = e.pageX - lightbox.offsetLeft;
-            panStartY = e.pageY - lightbox.offsetTop;
-            panScrollLeft = lightbox.scrollLeft;
-            panScrollTop = lightbox.scrollTop;
+            panStartMouseX = e.pageX;
+            panStartMouseY = e.pageY;
+            panStartX = panX;
+            panStartY = panY;
             lightboxImg.style.cursor = 'grabbing';
         });
 
         window.addEventListener('mousemove', (e) => {
             if (!isPanning) return;
             e.preventDefault();
-            const x = e.pageX - lightbox.offsetLeft;
-            const y = e.pageY - lightbox.offsetTop;
-            lightbox.scrollLeft = panScrollLeft - (x - panStartX);
-            lightbox.scrollTop = panScrollTop - (y - panStartY);
+            const deltaX = e.pageX - panStartMouseX;
+            const deltaY = e.pageY - panStartMouseY;
+            let newX = panStartX + deltaX;
+            let newY = panStartY + deltaY;
+
+            // 이미지가 화면 밖으로 과도하게 벗어나지 않도록 이동 범위 제한
+            const containerRect = lightbox.getBoundingClientRect();
+            const naturalWidth = lightboxImg.offsetWidth;
+            const naturalHeight = lightboxImg.offsetHeight;
+            const maxX = Math.max(0, (naturalWidth * ZOOM_SCALE - containerRect.width) / 2);
+            const maxY = Math.max(0, (naturalHeight * ZOOM_SCALE - containerRect.height) / 2);
+            newX = Math.min(maxX, Math.max(-maxX, newX));
+            newY = Math.min(maxY, Math.max(-maxY, newY));
+
+            panX = newX;
+            panY = newY;
+            wrapper.style.transform = `translate(${panX}px, ${panY}px) scale(${ZOOM_SCALE})`;
         });
 
         window.addEventListener('mouseup', () => {
@@ -396,22 +414,34 @@ lightboxImg.addEventListener('click', (e) => {
                 closeLightbox();
             }
         });
-        // 안전 모바일 터치 트래킹 시스템 내장
+        // 안전 모바일 터치 트래킹 시스템 내장 (translate 기반, 4방향 모두 이동)
         lightbox.addEventListener('touchstart', (e) => {
             if (!isZoomed) return;
             isDragging = true;
-            startX = e.touches[0].pageX - lightbox.offsetLeft;
-            startY = e.touches[0].pageY - lightbox.offsetTop;
-            scrollLeft = lightbox.scrollLeft;
-            scrollTop = lightbox.scrollTop;
+            startX = e.touches[0].pageX;
+            startY = e.touches[0].pageY;
+            scrollLeft = panX;
+            scrollTop = panY;
         }, { passive: true });
         lightbox.addEventListener('touchend', () => { isDragging = false; });
         lightbox.addEventListener('touchmove', (e) => {
             if (!isDragging) return;
-            const x = e.touches[0].pageX - lightbox.offsetLeft;
-            const y = e.touches[0].pageY - lightbox.offsetTop;
-            lightbox.scrollLeft = scrollLeft - (x - startX) * 1.5;
-            lightbox.scrollTop = scrollTop - (y - startY) * 1.5;
+            const x = e.touches[0].pageX;
+            const y = e.touches[0].pageY;
+            let newX = scrollLeft + (x - startX);
+            let newY = scrollTop + (y - startY);
+
+            const containerRect = lightbox.getBoundingClientRect();
+            const naturalWidth = lightboxImg.offsetWidth;
+            const naturalHeight = lightboxImg.offsetHeight;
+            const maxX = Math.max(0, (naturalWidth * ZOOM_SCALE - containerRect.width) / 2);
+            const maxY = Math.max(0, (naturalHeight * ZOOM_SCALE - containerRect.height) / 2);
+            newX = Math.min(maxX, Math.max(-maxX, newX));
+            newY = Math.min(maxY, Math.max(-maxY, newY));
+
+            panX = newX;
+            panY = newY;
+            wrapper.style.transform = `translate(${panX}px, ${panY}px) scale(${ZOOM_SCALE})`;
         }, { passive: true });
         // 시스템 가동
         initGallery();

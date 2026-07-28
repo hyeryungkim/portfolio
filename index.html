@@ -12,39 +12,17 @@
     
     <link rel="stylesheet" href="style.css">
     <style>
-  /* ======================================================= */
-/* ✍ [여기서 스크롤바 디자인을 은은하고 세련되게 조절하세요] */
-/* ======================================================== */
-
-/* 브라우저 및 구글 프레임의 우측 기본 스크롤바 가드 */
-html, body {
-    margin: 0 !important;
-    padding: 0 !important;
-    overflow-x: hidden !important; /* 가로 스크롤은 완벽 차단 */
-    overflow-y: auto !important;   /* 세로 내용이 많아지면 자동으로 스크롤 생성 */
-}
-
-/* 1. 세로 스크롤바 전체 가로 두께 (가늘고 슬림하게 조율) */
-::-webkit-scrollbar {
-    width: 6px !important; /* 👈 숫자를 4px로 낮추면 더 가늘어지고, 8px로 올리면 더 두꺼워집니다 */
-    display: block !important; /* 숨김 해제 */
-}
-
-/* 2. 스크롤바 움직이는 막대(바) 디자인 */
-::-webkit-scrollbar-thumb {
-    background-color: rgba(0, 0, 0, 0.15) !important; /* 👈 은은하고 연한 반투명 검은색 (0.15 = 15% 투명도) */
-    border-radius: 10px !important; /* 막대 모서리를 둥글게 깎아 부드럽게 처리 */
-}
-
-/* 3. 마우스를 스크롤바 막대 위에 올렸을 때 (살짝 더 진해지는 효과) */
-::-webkit-scrollbar-thumb:hover {
-    background-color: rgba(0, 0, 0, 0.3) !important; /* 마우스 대면 30% 투명도로 약간 더 선명해짐 */
-}
-
-/* 4. 스크롤바가 지나다니는 뒤쪽 배경 레일 (완전 투명 처리하여 깔끔함 유지) */
-::-webkit-scrollbar-track {
-    background: transparent !important;
-}
+        /* 브라우저 및 구글 프레임의 우측 기본 스크롤바 투명 가드 */
+        html, body {
+            margin: 0 !important;
+            padding: 0 !important;
+            overflow-x: hidden !important;
+            overflow-y: auto !important;
+        }
+        ::-webkit-scrollbar {
+            display: none !important;
+            width: 0 !important;
+        }
         /* 첫 화면 사진 목록 정렬 (3열 바둑판 고정) */
         .gallery {
             display: grid !important;
@@ -235,12 +213,6 @@ html, body {
 <script>
     let currentIndex = 0;
     let isZoomed = false;
-    // ✨ 스페이스+드래그 팬(pan) 상태 변수
-    let isSpacePressed = false;
-    let isPanning = false;
-    let panX = 0, panY = 0; // 현재 이미지가 이동된 좌표(px)
-    let panStartMouseX, panStartMouseY, panStartX, panStartY;
-    const ZOOM_SCALE = 3.0;
     
     const IMAGES_PER_PAGE = 9; 
     let visibleCount = IMAGES_PER_PAGE;
@@ -319,8 +291,7 @@ html, body {
         }
         function updateLightbox() {
             lightboxImg.src = galleryData[currentIndex].src;
-            panX = 0; panY = 0;
-            wrapper.style.transform = 'translate(0px, 0px) scale(1)';
+            wrapper.style.transform = 'scale(1)';
             lightbox.style.overflow = 'hidden'; 
             isZoomed = false;
             updateCursorStatus(false); 
@@ -340,7 +311,7 @@ html, body {
                 lightboxImg.style.cursor = isZoomed ? 'zoom-out' : 'zoom-in';
             }
         }
-        // 🎹 Alt 키 입력 감지 이벤트 룸 (+ 스페이스바 팬 모드)
+        // 🎹 Alt 키 입력 감지 이벤트 룸
         window.addEventListener('keydown', (e) => {
             if (lightbox.style.display !== 'flex') return;
             if (e.key === 'Alt') {
@@ -351,122 +322,59 @@ html, body {
             if (e.key === 'ArrowRight') changeImage(1);
             if (e.key === 'ArrowLeft') changeImage(-1);
             if (e.key === 'Escape') closeLightbox();
-
-            // ✨ 스페이스바 팬 모드 진입 (확대된 상태에서만)
-            if (e.code === 'Space' && isZoomed) {
-                e.preventDefault(); // 페이지 스크롤 방지
-                isSpacePressed = true;
-                lightboxImg.style.cursor = 'grab';
-            }
         });
         window.addEventListener('keyup', (e) => {
             if (e.key === 'Alt') {
                 updateCursorStatus(false);
             }
-            // ✨ 스페이스바 떼면 팬 모드 종료
-            if (e.code === 'Space') {
-                isSpacePressed = false;
-                isPanning = false;
-                updateCursorStatus(false);
-            }
         });
-       // ✨ 클릭으로 확대/축소 (스페이스 팬 모드 중에는 무시)
+       // ✨ 이 코드로 바꾸어 넣으세요! (알트 없이 그냥 클릭으로 확대/축소 무한 반복)
 lightboxImg.addEventListener('click', (e) => {
     e.stopPropagation(); // 배경 클릭 꺼짐 현상 방지 가드
-    if (isSpacePressed) return; // 팬 모드 중 클릭은 확대/축소 무시
     if (isZoomed) {
         // 1. 이미 확대된 상태라면? ➡ 그냥 클릭 시 원래대로 '축소'
-        panX = 0; panY = 0;
-        wrapper.style.transform = 'translate(0px, 0px) scale(1)';
+        wrapper.style.transform = 'scale(1)';
         lightbox.style.overflow = 'hidden';
         isZoomed = false;
         updateCursorStatus(false);
     } else {
         // 2. 축소된 상태라면? ➡ 그냥 클릭 시 300% 대형 '확대'
-        panX = 0; panY = 0;
-        wrapper.style.transform = `translate(0px, 0px) scale(${ZOOM_SCALE})`;
-        lightbox.style.overflow = 'hidden';
+        wrapper.style.transform = 'scale(3.0)';
+        lightbox.style.overflow = 'auto';
         isZoomed = true;
         updateCursorStatus(false);
     }
 });
-        // 🖱 스페이스+드래그로 사진 곳곳 보기 (데스크톱) — translate 기반, 4방향 모두 이동
-        lightboxImg.addEventListener('mousedown', (e) => {
-            if (!isSpacePressed || !isZoomed) return;
-            e.preventDefault();
-            isPanning = true;
-            panStartMouseX = e.pageX;
-            panStartMouseY = e.pageY;
-            panStartX = panX;
-            panStartY = panY;
-            lightboxImg.style.cursor = 'grabbing';
-        });
-
-        window.addEventListener('mousemove', (e) => {
-            if (!isPanning) return;
-            e.preventDefault();
-            const deltaX = e.pageX - panStartMouseX;
-            const deltaY = e.pageY - panStartMouseY;
-            let newX = panStartX + deltaX;
-            let newY = panStartY + deltaY;
-
-            // 이미지가 화면 밖으로 과도하게 벗어나지 않도록 이동 범위 제한
-            const containerRect = lightbox.getBoundingClientRect();
-            const naturalWidth = lightboxImg.offsetWidth;
-            const naturalHeight = lightboxImg.offsetHeight;
-            const maxX = Math.max(0, (naturalWidth * ZOOM_SCALE - containerRect.width) / 2);
-            const maxY = Math.max(0, (naturalHeight * ZOOM_SCALE - containerRect.height) / 2);
-            newX = Math.min(maxX, Math.max(-maxX, newX));
-            newY = Math.min(maxY, Math.max(-maxY, newY));
-
-            panX = newX;
-            panY = newY;
-            wrapper.style.transform = `translate(${panX}px, ${panY}px) scale(${ZOOM_SCALE})`;
-        });
-
-        window.addEventListener('mouseup', () => {
-            if (isPanning) {
-                isPanning = false;
-                lightboxImg.style.cursor = isSpacePressed ? 'grab' : 'zoom-out';
-            }
-        });
-        // ❌ 사진 밖 검은색 뒷배경 여백을 클릭하면 창 닫기
-        lightbox.addEventListener('click', function(e) {
-            if (e.target === this || e.target === wrapper) {
-                closeLightbox();
-            }
-        });
-        // 안전 모바일 터치 트래킹 시스템 내장 (translate 기반, 4방향 모두 이동)
+        // 💡 [여기서부터 복사하세요] 
+        // 윈도우(모니터 전체 화면) 어디를 클릭하든 무조건 팝업창이 즉시 꺼지는 강력 전 전역 차단 장치!
+        window.addEventListener('click', function(e) {
+            // 단, 첫 화면에서 썸네일 사진을 누를 때 팝업창이 뜨자마자 바로 꺼지는 현상을 막기 위해 
+            // 갤러리 아이템을 클릭했을 때만 예외 가드를 작동시킵니다.
+            if (e.target.closest('.gallery-item')) return;
+            
+            closeLightbox();
+        }, true); // true를 붙여서 그 어떤 클릭 신호보다 최우선으로 실행하게 가드합니다.
+        // 안전 모바일 터치 트래킹 시스템 내장 (삭제되지 않고 안전하게 보존 완료)
         lightbox.addEventListener('touchstart', (e) => {
             if (!isZoomed) return;
             isDragging = true;
-            startX = e.touches[0].pageX;
-            startY = e.touches[0].pageY;
-            scrollLeft = panX;
-            scrollTop = panY;
+            startX = e.touches.pageX - lightbox.offsetLeft;
+            startY = e.touches.pageY - lightbox.offsetTop;
+            scrollLeft = lightbox.scrollLeft;
+            scrollTop = lightbox.scrollTop;
         }, { passive: true });
-        lightbox.addEventListener('touchend', () => { isDragging = false; });
+        
+        lightbox.addEventListener('touchend', () => { 
+            isDragging = false; 
+        });
+        
         lightbox.addEventListener('touchmove', (e) => {
             if (!isDragging) return;
-            const x = e.touches[0].pageX;
-            const y = e.touches[0].pageY;
-            let newX = scrollLeft + (x - startX);
-            let newY = scrollTop + (y - startY);
-
-            const containerRect = lightbox.getBoundingClientRect();
-            const naturalWidth = lightboxImg.offsetWidth;
-            const naturalHeight = lightboxImg.offsetHeight;
-            const maxX = Math.max(0, (naturalWidth * ZOOM_SCALE - containerRect.width) / 2);
-            const maxY = Math.max(0, (naturalHeight * ZOOM_SCALE - containerRect.height) / 2);
-            newX = Math.min(maxX, Math.max(-maxX, newX));
-            newY = Math.min(maxY, Math.max(-maxY, newY));
-
-            panX = newX;
-            panY = newY;
-            wrapper.style.transform = `translate(${panX}px, ${panY}px) scale(${ZOOM_SCALE})`;
+            const x = e.touches.pageX - lightbox.offsetLeft;
+            const y = e.touches.pageY - lightbox.offsetTop;
+            lightbox.scrollLeft = scrollLeft - (x - startX) * 1.5;
+            lightbox.scrollTop = scrollTop - (y - startY) * 1.5;
         }, { passive: true });
-        // 시스템 가동
+        // 시스템 가동 단추 안전 보존 완료
         initGallery();
 </script>
-</body>
-</html>

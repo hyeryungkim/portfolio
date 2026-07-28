@@ -213,6 +213,10 @@
 <script>
     let currentIndex = 0;
     let isZoomed = false;
+    // ✨ 스페이스+드래그 팬(pan) 상태 변수
+    let isSpacePressed = false;
+    let isPanning = false;
+    let panStartX, panStartY, panScrollLeft, panScrollTop;
     
     const IMAGES_PER_PAGE = 9; 
     let visibleCount = IMAGES_PER_PAGE;
@@ -311,7 +315,7 @@
                 lightboxImg.style.cursor = isZoomed ? 'zoom-out' : 'zoom-in';
             }
         }
-        // 🎹 Alt 키 입력 감지 이벤트 룸
+        // 🎹 Alt 키 입력 감지 이벤트 룸 (+ 스페이스바 팬 모드)
         window.addEventListener('keydown', (e) => {
             if (lightbox.style.display !== 'flex') return;
             if (e.key === 'Alt') {
@@ -322,15 +326,29 @@
             if (e.key === 'ArrowRight') changeImage(1);
             if (e.key === 'ArrowLeft') changeImage(-1);
             if (e.key === 'Escape') closeLightbox();
+
+            // ✨ 스페이스바 팬 모드 진입 (확대된 상태에서만)
+            if (e.code === 'Space' && isZoomed) {
+                e.preventDefault(); // 페이지 스크롤 방지
+                isSpacePressed = true;
+                lightboxImg.style.cursor = 'grab';
+            }
         });
         window.addEventListener('keyup', (e) => {
             if (e.key === 'Alt') {
                 updateCursorStatus(false);
             }
+            // ✨ 스페이스바 떼면 팬 모드 종료
+            if (e.code === 'Space') {
+                isSpacePressed = false;
+                isPanning = false;
+                updateCursorStatus(false);
+            }
         });
-       // ✨ 이 코드로 바꾸어 넣으세요! (알트 없이 그냥 클릭으로 확대/축소 무한 반복)
+       // ✨ 클릭으로 확대/축소 (스페이스 팬 모드 중에는 무시)
 lightboxImg.addEventListener('click', (e) => {
     e.stopPropagation(); // 배경 클릭 꺼짐 현상 방지 가드
+    if (isSpacePressed) return; // 팬 모드 중 클릭은 확대/축소 무시
     if (isZoomed) {
         // 1. 이미 확대된 상태라면? ➡ 그냥 클릭 시 원래대로 '축소'
         wrapper.style.transform = 'scale(1)';
@@ -345,6 +363,33 @@ lightboxImg.addEventListener('click', (e) => {
         updateCursorStatus(false);
     }
 });
+        // 🖱 스페이스+드래그로 사진 곳곳 보기 (데스크톱)
+        lightboxImg.addEventListener('mousedown', (e) => {
+            if (!isSpacePressed || !isZoomed) return;
+            e.preventDefault();
+            isPanning = true;
+            panStartX = e.pageX - lightbox.offsetLeft;
+            panStartY = e.pageY - lightbox.offsetTop;
+            panScrollLeft = lightbox.scrollLeft;
+            panScrollTop = lightbox.scrollTop;
+            lightboxImg.style.cursor = 'grabbing';
+        });
+
+        window.addEventListener('mousemove', (e) => {
+            if (!isPanning) return;
+            e.preventDefault();
+            const x = e.pageX - lightbox.offsetLeft;
+            const y = e.pageY - lightbox.offsetTop;
+            lightbox.scrollLeft = panScrollLeft - (x - panStartX);
+            lightbox.scrollTop = panScrollTop - (y - panStartY);
+        });
+
+        window.addEventListener('mouseup', () => {
+            if (isPanning) {
+                isPanning = false;
+                lightboxImg.style.cursor = isSpacePressed ? 'grab' : 'zoom-out';
+            }
+        });
         // ❌ 사진 밖 검은색 뒷배경 여백을 클릭하면 창 닫기
         lightbox.addEventListener('click', function(e) {
             if (e.target === this || e.target === wrapper) {
@@ -371,3 +416,5 @@ lightboxImg.addEventListener('click', (e) => {
         // 시스템 가동
         initGallery();
 </script>
+</body>
+</html>

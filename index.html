@@ -1,381 +1,452 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hyeryung Kim | Portfolio</title>
-    
-    <!-- 🌐 Noto Serif Oriya 공식 구글 주소 연동 -->
-    <link rel="preconnect" href="https://googleapis.com">
-    <link rel="preconnect" href="https://gstatic.com" crossorigin>
-    <link href="https://googleapis.com/css2?family=Noto+Serif+Oriya:wght@300;400;500;700&display=swap" rel="stylesheet">
-    
-    <link rel="stylesheet" href="style.css">
-    <style>
-        /* 브라우저 및 구글 프레임의 우측 기본 스크롤바 투명 가드 */
-        html, body {
-            margin: 0 !important;
-            padding: 0 !important;
-            overflow-x: hidden !important;
-            overflow-y: auto !important;
-        }
-        ::-webkit-scrollbar {
-            display: none !important;
-            width: 0 !important;
-        }
-        /* 첫 화면 사진 목록 정렬 (3열 바둑판 고정) */
-        .gallery {
-            display: grid !important;
-            grid-template-columns: repeat(3, 1fr) !important;
-            gap: 40px !important;
-            max-width: 1000px !important;
-            margin: 0 auto !important;
-            padding: 20px 0 !important;
-        }
-        @media (max-width: 768px) {
-            .gallery { grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)) !important; }
-        }
-        /* 개별 사진+텍스트 카드 세트 */
-        .gallery-container {
-            display: none; 
-            flex-direction: column !important;
-            align-items: center !important;
-            text-align: center !important;
-        }
-        /* 1. 작품 제목(Title) 디자인 */
-        .item-title { 
-            font-family: "Noto Serif", serif !important; 
-            color: #4a4949 !important; 
-            text-align: center !important;
-            letter-spacing: 0.5px !important; 
-            margin: 0 0 6px 0 !important; 
-            font-size: 13px !important;    
-            font-weight: 700 !important;   
-        }
-        
-        /* 2. 작품 설명 및 사이즈(Description) 디자인 */
-        .item-desc { 
-            font-family: "Noto Serif", serif !important; 
-            color: #4a4949 !important;     
-            text-align: center !important;
-            line-height: 1.2 !important; 
-            margin: 0 !important; 
-            white-space: pre-line !important; 
-            font-size: 11px !important;    
-            font-weight: 600 !important;   
-        }
-        /* 더보기 버튼 디자인 */
-        .more-btn-container {
-            text-align: center;
-            margin: 50px 0 80px 0;
-            width: 100%;
-        }
-        .more-btn {
-            background: transparent;
-            border: 1px solid #4a4949;
-            color: #4a4949;
-            padding: 12px 40px;
-            font-size: 13px;
-            font-family: "Noto Serif Oriya", serif;
-            letter-spacing: 2px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            text-transform: uppercase;
-        }
-        .more-btn:hover {
-            background-color: #4a4949;
-            color: #ffffff;
-        }
-        /* 첫 화면 사진 테두리 직각 고정 */
-        .gallery-item {
-            cursor: pointer !important;
-            width: 280px !important;
-            height: 280px !important;
-            overflow: hidden !important;
-            border-radius: 0px !important; 
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06) !important;
-            transition: transform 0.2s ease;
-            margin-bottom: 15px !important;
-        }
-        .gallery-item:hover { transform: translateY(-4px) !important; }
-        .gallery-item img { width: 100% !important; height: 100% !important; object-fit: cover !important; display: block !important; }
-        /* 모서리 직각 및 대폭 확대된 팝업창 박스 고정 */
-        .custom-lightbox { 
-            display: none; 
-            position: fixed !important; 
-            top: 50% !important; 
-            left: 50% !important; 
-            transform: translate(-50%, -50%) !important; 
-            
-            width: 100vw !important; 
-            height: 100vh !important; 
-            max-width: 1400px !important;  
-            max-height: 950px !important; 
-            
-            background-color: rgba(0, 0, 0, 0.98) !important; 
-            z-index: 999999 !important; 
-            justify-content: center !important; 
-            align-items: center !important; 
-            border-radius: 0px !important; 
-            box-shadow: 0 10px 40px rgba(0,0,0,0.6) !important;
-            overflow: hidden !important;   
-        }
-        /* 사진 액자 공간 */
-        .lightbox-wrapper { 
-            position: relative !important; 
-            width: 90% !important;
-            height: 90% !important;
-            max-width: 90% !important;
-            max-height: 90% !important;
-            display: flex !important; 
-            justify-content: center !important; 
-            align-items: center !important; 
-            transition: transform 0.2s ease-in-out !important; 
-        }
-        .custom-lightbox img { 
-            max-width: 100% !important; 
-            max-height: 100% !important; 
-            width: auto !important; 
-            height: auto !important; 
-            object-fit: contain !important; 
-            display: block !important; 
-            margin: auto !important;
-        }
-        /* 상단 우측 미니멀 툴바 배치실 */
-        .lightbox-toolbar { 
-            position: absolute !important; 
-            top: 25px !important; 
-            right: 35px !important; 
-            display: flex !important;
-            align-items: center !important;
-            gap: 25px !important; 
-            z-index: 100002 !important; 
-            user-select: none !important;
-        }
-        .toolbar-btn { 
-            color: #ffffff !important; 
-            font-size: 32px !important; 
-            cursor: pointer !important; 
-            opacity: 0.5 !important; 
-            transition: opacity 0.2s !important; 
-        }
-        .toolbar-btn:hover { opacity: 1 !important; }
-        /* ◀ ▶ 이동 화살표 버튼 위치 및 크기 */
-        .nav-btn { 
-            position: absolute !important; 
-            top: 50% !important; 
-            transform: translateY(-50%) !important; 
-            cursor: pointer !important; 
-            width: 40px !important; 
-            height: 60px !important; 
-            display: flex !important; 
-            align-items: center !important; 
-            justify-content: center !important; 
-            opacity: 0.3 !important; 
-            z-index: 1000001 !important; 
-            background-color: transparent !important; 
-            border: none !important; 
-            transition: opacity 0.2s ease !important; 
-        }
-        .nav-btn:hover { opacity: 1 !important; }
-        .prev-btn { left: 15px !important; }  
-        .next-btn { right: 15px !important; } 
-        .nav-icon { width: 32px; height: 32px; stroke: #ffffff; stroke-width: 1.5; fill: none; stroke-linecap: round; stroke-linejoin: round; }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hyeryung Kim | Portfolio</title>
+
+<!-- Noto Serif Oriya 공식 구글 주소 연동 -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+Oriya:wght@300;400;500;700&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="style.css">
+<style>
+/* 브라우저 및 구글 프레임의 우측 기본 스크롤바 투명 가드 */
+html, body {
+  margin: 0 !important;
+  padding: 0 !important;
+  overflow-x: hidden !important;
+  overflow-y: auto !important;
+}
+::-webkit-scrollbar {
+  display: none !important;
+  width: 0 !important;
+}
+/* 첫 화면 사진 목록 정렬 (3열 바둑판 고정) */
+.gallery {
+  display: grid !important;
+  grid-template-columns: repeat(3, 1fr) !important;
+  gap: 40px !important;
+  max-width: 1000px !important;
+  margin: 0 auto !important;
+  padding: 20px 0 !important;
+}
+@media (max-width: 768px) {
+  .gallery { grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)) !important; }
+}
+/* 개별 사진+텍스트 카드 세트 */
+.gallery-container {
+  display: none;
+  flex-direction: column !important;
+  align-items: center !important;
+  text-align: center !important;
+}
+/* 1. 작품 제목(Title) 디자인 */
+.item-title {
+  font-family: "Noto Serif", serif !important;
+  color: #4a4949 !important;
+  text-align: center !important;
+  letter-spacing: 0.5px !important;
+  margin: 0 0 6px 0 !important;
+  font-size: 13px !important;
+  font-weight: 700 !important;
+}
+
+/* 2. 작품 설명 및 사이즈(Description) 디자인 */
+.item-desc {
+  font-family: "Noto Serif", serif !important;
+  color: #4a4949 !important;
+  text-align: center !important;
+  line-height: 1.2 !important;
+  margin: 0 !important;
+  white-space: pre-line !important;
+  font-size: 11px !important;
+  font-weight: 600 !important;
+}
+/* 더보기 버튼 디자인 */
+.more-btn-container {
+  text-align: center;
+  margin: 50px 0 80px 0;
+  width: 100%;
+}
+.more-btn {
+  background: transparent;
+  border: 1px solid #4a4949;
+  color: #4a4949;
+  padding: 12px 40px;
+  font-size: 13px;
+  font-family: "Noto Serif Oriya", serif;
+  letter-spacing: 2px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-transform: uppercase;
+}
+.more-btn:hover {
+  background-color: #4a4949;
+  color: #ffffff;
+}
+/* 첫 화면 사진 테두리 직각 고정 */
+.gallery-item {
+  cursor: pointer !important;
+  width: 280px !important;
+  height: 280px !important;
+  overflow: hidden !important;
+  border-radius: 0px !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06) !important;
+  transition: transform 0.2s ease;
+  margin-bottom: 15px !important;
+}
+.gallery-item:hover { transform: translateY(-4px) !important; }
+.gallery-item img { width: 100% !important; height: 100% !important; object-fit: cover !important; display: block !important; }
+
+/* 모서리 직각 및 대폭 확대된 팝업창 박스 고정 */
+.custom-lightbox {
+  display: none;
+  position: fixed !important;
+  top: 50% !important;
+  left: 50% !important;
+  transform: translate(-50%, -50%) !important;
+
+  width: 100vw !important;
+  height: 100vh !important;
+  max-width: 1400px !important;
+  max-height: 950px !important;
+
+  background-color: rgba(0, 0, 0, 0.98) !important;
+  z-index: 999999 !important;
+  justify-content: center !important;
+  align-items: center !important;
+  border-radius: 0px !important;
+  box-shadow: 0 10px 40px rgba(0,0,0,0.6) !important;
+  overflow: hidden !important;
+}
+/* 사진 액자 공간 */
+.lightbox-wrapper {
+  position: relative !important;
+  width: 90% !important;
+  height: 90% !important;
+  max-width: 90% !important;
+  max-height: 90% !important;
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+  transition: transform 0.2s ease-in-out !important;
+}
+.custom-lightbox img {
+  max-width: 100% !important;
+  max-height: 100% !important;
+  width: auto !important;
+  height: auto !important;
+  object-fit: contain !important;
+  display: block !important;
+  margin: auto !important;
+  user-select: none !important;
+  -webkit-user-drag: none !important;
+}
+/* 상단 우측 미니멀 툴바 배치실 */
+.lightbox-toolbar {
+  position: absolute !important;
+  top: 25px !important;
+  right: 35px !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 22px !important;
+  z-index: 100002 !important;
+  user-select: none !important;
+}
+.toolbar-btn {
+  color: #ffffff !important;
+  font-size: 26px !important;
+  cursor: pointer !important;
+  opacity: 0.6 !important;
+  transition: opacity 0.2s !important;
+  width: 34px;
+  height: 34px;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  border: none !important;
+  line-height: 1 !important;
+}
+.toolbar-btn.close-btn { font-size: 30px !important; }
+.toolbar-btn:hover { opacity: 1 !important; }
+.toolbar-btn.disabled { opacity: 0.2 !important; cursor: default !important; pointer-events: none !important; }
+
+/* ◀ ▶ 이동 화살표 버튼 위치 및 크기 */
+.nav-btn {
+  position: absolute !important;
+  top: 50% !important;
+  transform: translateY(-50%) !important;
+  cursor: pointer !important;
+  width: 40px !important;
+  height: 60px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  opacity: 0.3 !important;
+  z-index: 1000001 !important;
+  background-color: transparent !important;
+  border: none !important;
+  transition: opacity 0.2s ease !important;
+}
+.nav-btn:hover { opacity: 1 !important; }
+.prev-btn { left: 15px !important; }
+.next-btn { right: 15px !important; }
+.nav-icon { width: 32px; height: 32px; stroke: #ffffff; stroke-width: 1.5; fill: none; stroke-linecap: round; stroke-linejoin: round; }
+</style>
 </head>
 <body>
-<!-- 🖼 갤러리 메인 영역 -->
+<!-- 갤러리 메인 영역 -->
 <div id="gallery" class="gallery"></div>
-<!-- ➕ MORE 버튼 영역 -->
+<!-- MORE 버튼 영역 -->
 <div id="more-btn-area" class="more-btn-container">
-    <button class="more-btn" onclick="showNextImages()">More</button>
+  <button class="more-btn" onclick="showNextImages()">More</button>
 </div>
-<!-- 🖤 완성형 팝업 제어 공간 -->
+<!-- 완성형 팝업 제어 공간 -->
 <div id="custom-lightbox" class="custom-lightbox">
-    <div class="lightbox-toolbar">
-        <span class="toolbar-btn" onclick="closeLightbox()" title="닫기">&times;</span>
-    </div>
-    <span class="nav-btn prev-btn" onclick="changeImage(-1, event)">
-        <svg class="nav-icon" viewBox="0 0 24 24">
-            <polyline points="15 18 9 12 15 6"></polyline>
-        </svg>
-    </span>
-    <span class="nav-btn next-btn" onclick="changeImage(1, event)">
-        <svg class="nav-icon" viewBox="0 0 24 24">
-            <polyline points="9 18 15 12 9 6"></polyline>
-        </svg>
-    </span>
-    <div id="lightbox-wrapper" class="lightbox-wrapper">
-        <img id="custom-lightbox-img" src="" alt="확대 사진">
-    </div>
+  <div class="lightbox-toolbar">
+    <span class="toolbar-btn" id="zoom-out-btn" onclick="zoomOut(event)" title="축소">&minus;</span>
+    <span class="toolbar-btn" id="zoom-in-btn" onclick="zoomIn(event)" title="확대">&plus;</span>
+    <span class="toolbar-btn close-btn" onclick="closeLightbox()" title="닫기">&times;</span>
+  </div>
+  <span class="nav-btn prev-btn" onclick="changeImage(-1, event)">
+    <svg class="nav-icon" viewBox="0 0 24 24">
+      <polyline points="15 18 9 12 15 6"></polyline>
+    </svg>
+  </span>
+  <span class="nav-btn next-btn" onclick="changeImage(1, event)">
+    <svg class="nav-icon" viewBox="0 0 24 24">
+      <polyline points="9 18 15 12 9 6"></polyline>
+    </svg>
+  </span>
+  <div id="lightbox-wrapper" class="lightbox-wrapper">
+    <img id="custom-lightbox-img" src="" alt="확대 사진">
+  </div>
 </div>
 <script src="script.js"></script>
 <script>
-    let currentIndex = 0;
-    let isZoomed = false;
-    
-    const IMAGES_PER_PAGE = 9; 
-    let visibleCount = IMAGES_PER_PAGE;
-    let isDragging = false;
-    let startX, startY, scrollLeft, scrollTop;
-    const lightbox = document.getElementById('custom-lightbox');
-    const wrapper = document.getElementById('lightbox-wrapper');
-    const lightboxImg = document.getElementById('custom-lightbox-img');
-    function initGallery() {
-        const galleryContainer = document.getElementById('gallery');
-        galleryContainer.innerHTML = '';
-        if (!galleryData || galleryData.length === 0) {
-            galleryContainer.innerHTML = '<div style="color:#aaa; text-align:center; margin-top:50px;">등록된 사진이 없습니다.</div>';
-            document.getElementById('more-btn-area').style.display = 'none';
-            return;
-        }
-        galleryData.forEach((item, index) => {
-            const containerDiv = document.createElement('div');
-            containerDiv.className = 'gallery-container';
-            containerDiv.id = `item-container-${index}`;
-            const itemDiv = document.createElement('div');
-            itemDiv.className = 'gallery-item';
-            itemDiv.setAttribute('onclick', `openLightbox(${index})`);
-            
-            const imgTag = document.createElement('img');
-            imgTag.src = item.src;
-            imgTag.alt = item.title;
-            
-            itemDiv.appendChild(imgTag);
-            containerDiv.appendChild(itemDiv);
-            const titleH3 = document.createElement('h3');
-            titleH3.className = 'item-title';
-            titleH3.innerText = item.title;
-            containerDiv.appendChild(titleH3);
-            const descP = document.createElement('p');
-            descP.className = 'item-desc';
-            descP.innerText = item.desc;
-            containerDiv.appendChild(descP);
-            galleryContainer.appendChild(containerDiv);
-        });
-        updateVisibility();
-    }
-// 💡 [여기서부터 복사해서 맨 밑에 이어서 붙여넣으세요]
-        function updateVisibility() {
-            galleryData.forEach((item, index) => {
-                const targetElement = document.getElementById(`item-container-${index}`);
-                if (targetElement) {
-                    if (index < visibleCount) {
-                        targetElement.style.display = 'flex';
-                    } else {
-                        targetElement.style.display = 'none';
-                    }
-                }
-            });
-            const moreBtnArea = document.getElementById('more-btn-area');
-            if (visibleCount >= galleryData.length) {
-                moreBtnArea.style.display = 'none';
-            } else {
-                moreBtnArea.style.display = 'block';
-            }
-        }
-        function showNextImages() {
-            visibleCount += IMAGES_PER_PAGE;
-            updateVisibility();
-        }
-        function openLightbox(index) {
-            currentIndex = index;
-            isZoomed = false;
-            updateLightbox();
-            lightbox.style.display = 'flex';
-            document.body.style.overflow = 'hidden';
-        }
-        function closeLightbox() {
-            lightbox.style.display = 'none';
-            document.body.style.overflow = 'auto';
-        }
-        function updateLightbox() {
-            lightboxImg.src = galleryData[currentIndex].src;
-            wrapper.style.transform = 'scale(1)';
-            lightbox.style.overflow = 'hidden'; 
-            isZoomed = false;
-            updateCursorStatus(false); 
-        }
-        function changeImage(direction, event) {
-            if (event) event.stopPropagation();
-            currentIndex += direction;
-            if (currentIndex >= galleryData.length) currentIndex = 0; 
-            if (currentIndex < 0) currentIndex = galleryData.length - 1; 
-            updateLightbox();
-        }
-        // 🔍 실시간 돋보기 커서(+ / -) 스위칭 빌더
-        function updateCursorStatus(altActive) {
-            if (altActive) {
-                lightboxImg.style.cursor = 'zoom-out';
-            } else {
-                lightboxImg.style.cursor = isZoomed ? 'zoom-out' : 'zoom-in';
-            }
-        }
-        // 🎹 Alt 키 입력 감지 이벤트 룸
-        window.addEventListener('keydown', (e) => {
-            if (lightbox.style.display !== 'flex') return;
-            if (e.key === 'Alt') {
-                e.preventDefault(); 
-                updateCursorStatus(true);
-            }
-            
-            if (e.key === 'ArrowRight') changeImage(1);
-            if (e.key === 'ArrowLeft') changeImage(-1);
-            if (e.key === 'Escape') closeLightbox();
-        });
-        window.addEventListener('keyup', (e) => {
-            if (e.key === 'Alt') {
-                updateCursorStatus(false);
-            }
-        });
-      // ✨ 삭제한 자리에 이 코드를 그대로 붙여넣으세요
+let currentIndex = 0;
+let isZoomed = false;
 
-// 1. 클릭 시 300% 확대/축소 무한 토글 및 커서 동기화
-lightboxImg.addEventListener('click', (e) => {
-    e.stopPropagation(); // 배경 클릭 꺼짐 현상 방지 가드
-    
-    if (isZoomed) {
-        // 이미 확대된 상태라면 원래 크기로 축소
-        wrapper.style.transform = 'scale(1)';
-        lightbox.style.overflow = 'hidden';
-        isZoomed = false;
-        updateCursorStatus(false); // 축소되었으므로 돋보기(+) 모양으로 전환
-    } else {
-        // 축소된 상태라면 300% 대형 확대
-        wrapper.style.transform = 'scale(3.0)';
-        lightbox.style.overflow = 'auto';
-        isZoomed = true;
-        updateCursorStatus(false); // 확대되었으므로 돋보기(-) 모양으로 전환
+// ── 확대/축소 설정 ──
+let zoomLevel = 1;          // 현재 배율 (1 = 100%)
+const MIN_ZOOM = 1;         // 최소 100%
+const MAX_ZOOM = 3;         // 최대 300%
+const ZOOM_STEP = 0.5;      // 버튼 한 번에 50%씩
+
+// ── 이동(팬) 설정 : 스크롤 대신 translate로 직접 이동시켜서 4방향 모두 자유롭게 이동 ──
+let panX = 0;
+let panY = 0;
+
+// ── 마우스/터치 드래그 공통 설정 ──
+let isDragging = false;
+let startX, startY, startPanX, startPanY;
+
+const IMAGES_PER_PAGE = 9;
+let visibleCount = IMAGES_PER_PAGE;
+
+const lightbox = document.getElementById('custom-lightbox');
+const wrapper = document.getElementById('lightbox-wrapper');
+const lightboxImg = document.getElementById('custom-lightbox-img');
+const zoomInBtn = document.getElementById('zoom-in-btn');
+const zoomOutBtn = document.getElementById('zoom-out-btn');
+
+function initGallery() {
+  const galleryContainer = document.getElementById('gallery');
+  galleryContainer.innerHTML = '';
+  if (!galleryData || galleryData.length === 0) {
+    galleryContainer.innerHTML = '<div style="color:#aaa; text-align:center; margin-top:50px;">등록된 사진이 없습니다.</div>';
+    document.getElementById('more-btn-area').style.display = 'none';
+    return;
+  }
+  galleryData.forEach((item, index) => {
+    const containerDiv = document.createElement('div');
+    containerDiv.className = 'gallery-container';
+    containerDiv.id = `item-container-${index}`;
+
+    const itemDiv = document.createElement('div');
+    itemDiv.className = 'gallery-item';
+    itemDiv.setAttribute('onclick', `openLightbox(${index})`);
+
+    const imgTag = document.createElement('img');
+    imgTag.src = item.src;
+    imgTag.alt = item.title;
+
+    itemDiv.appendChild(imgTag);
+    containerDiv.appendChild(itemDiv);
+
+    const titleH3 = document.createElement('h3');
+    titleH3.className = 'item-title';
+    titleH3.innerText = item.title;
+    containerDiv.appendChild(titleH3);
+
+    const descP = document.createElement('p');
+    descP.className = 'item-desc';
+    descP.innerText = item.desc;
+    containerDiv.appendChild(descP);
+
+    galleryContainer.appendChild(containerDiv);
+  });
+  updateVisibility();
+}
+
+function updateVisibility() {
+  galleryData.forEach((item, index) => {
+    const targetElement = document.getElementById(`item-container-${index}`);
+    if (targetElement) {
+      targetElement.style.display = index < visibleCount ? 'flex' : 'none';
     }
+  });
+  const moreBtnArea = document.getElementById('more-btn-area');
+  moreBtnArea.style.display = visibleCount >= galleryData.length ? 'none' : 'block';
+}
+
+function showNextImages() {
+  visibleCount += IMAGES_PER_PAGE;
+  updateVisibility();
+}
+
+function openLightbox(index) {
+  currentIndex = index;
+  updateLightbox();
+  lightbox.style.display = 'flex';
+  document.body.style.overflow = 'hidden';
+}
+
+function closeLightbox() {
+  lightbox.style.display = 'none';
+  document.body.style.overflow = 'auto';
+}
+
+function updateLightbox() {
+  lightboxImg.src = galleryData[currentIndex].src;
+  resetZoom();
+}
+
+function changeImage(direction, event) {
+  if (event) event.stopPropagation();
+  currentIndex += direction;
+  if (currentIndex >= galleryData.length) currentIndex = 0;
+  if (currentIndex < 0) currentIndex = galleryData.length - 1;
+  updateLightbox();
+}
+
+// ── 확대 / 축소 버튼 로직 ──
+function applyTransform() {
+  wrapper.style.transform = `translate(${panX}px, ${panY}px) scale(${zoomLevel})`;
+}
+
+// 확대된 배율만큼 이동할 수 있는 최대 범위로 panX/panY를 제한 (사진이 화면 밖으로 완전히 사라지지 않도록)
+function clampPan() {
+  const maxPanX = (wrapper.offsetWidth * (zoomLevel - 1)) / 2;
+  const maxPanY = (wrapper.offsetHeight * (zoomLevel - 1)) / 2;
+  panX = Math.max(-maxPanX, Math.min(maxPanX, panX));
+  panY = Math.max(-maxPanY, Math.min(maxPanY, panY));
+}
+
+function applyZoom() {
+  clampPan();
+  applyTransform();
+  isZoomed = zoomLevel > MIN_ZOOM;
+  lightboxImg.style.cursor = isZoomed ? 'grab' : 'default';
+
+  zoomOutBtn.classList.toggle('disabled', zoomLevel <= MIN_ZOOM);
+  zoomInBtn.classList.toggle('disabled', zoomLevel >= MAX_ZOOM);
+}
+
+function zoomIn(event) {
+  if (event) event.stopPropagation();
+  zoomLevel = Math.min(MAX_ZOOM, zoomLevel + ZOOM_STEP);
+  applyZoom();
+}
+
+function zoomOut(event) {
+  if (event) event.stopPropagation();
+  zoomLevel = Math.max(MIN_ZOOM, zoomLevel - ZOOM_STEP);
+  applyZoom();
+}
+
+function resetZoom() {
+  zoomLevel = MIN_ZOOM;
+  panX = 0;
+  panY = 0;
+  applyZoom();
+}
+
+// ── 키보드 조작 (좌우 화살표 / ESC) ──
+window.addEventListener('keydown', (e) => {
+  if (lightbox.style.display !== 'flex') return;
+  if (e.key === 'ArrowRight') changeImage(1);
+  if (e.key === 'ArrowLeft') changeImage(-1);
+  if (e.key === 'Escape') closeLightbox();
+  if (e.key === '+' || e.key === '=') zoomIn();
+  if (e.key === '-' || e.key === '_') zoomOut();
 });
 
-// 2. 사진 밖 검은색 뒷배경 여백을 클릭하면 창 닫기
+// 사진 밖 검은색 뒷배경 여백을 클릭하면 창 닫기
 lightbox.addEventListener('click', function(e) {
-    if (e.target === this || e.target === wrapper) {
-        closeLightbox();
-    }
+  if (e.target === this || e.target === wrapper) {
+    closeLightbox();
+  }
 });
 
-// 3. 모바일 터치 드래그 이동 시스템
-lightbox.addEventListener('touchstart', (e) => {
-    if (!isZoomed) return;
-    isDragging = true;
-    startX = e.touches[0].pageX - lightbox.offsetLeft;
-    startY = e.touches[0].pageY - lightbox.offsetTop;
-    scrollLeft = lightbox.scrollLeft;
-    scrollTop = lightbox.scrollTop;
+// ── 마우스 드래그로 확대된 사진 이동 (데스크탑) : translate 방식이라 상하좌우 모두 자유롭게 이동 ──
+wrapper.addEventListener('mousedown', (e) => {
+  if (!isZoomed) return;
+  isDragging = true;
+  startX = e.pageX;
+  startY = e.pageY;
+  startPanX = panX;
+  startPanY = panY;
+  wrapper.style.transition = 'none'; // 드래그 중엔 애니메이션 지연 없이 즉각 반응
+  lightboxImg.style.cursor = 'grabbing';
+  e.preventDefault();
+});
+
+window.addEventListener('mouseup', () => {
+  if (!isDragging) return;
+  isDragging = false;
+  wrapper.style.transition = 'transform 0.2s ease-in-out';
+  if (isZoomed) lightboxImg.style.cursor = 'grab';
+});
+
+window.addEventListener('mousemove', (e) => {
+  if (!isDragging) return;
+  e.preventDefault();
+  panX = startPanX + (e.pageX - startX);
+  panY = startPanY + (e.pageY - startY);
+  clampPan();
+  applyTransform();
+});
+
+// ── 모바일 터치 드래그 이동 시스템 (translate 방식) ──
+wrapper.addEventListener('touchstart', (e) => {
+  if (!isZoomed) return;
+  isDragging = true;
+  startX = e.touches[0].pageX;
+  startY = e.touches[0].pageY;
+  startPanX = panX;
+  startPanY = panY;
+  wrapper.style.transition = 'none';
 }, { passive: true });
 
-lightbox.addEventListener('touchend', () => { isDragging = false; });
+window.addEventListener('touchend', () => {
+  if (!isDragging) return;
+  isDragging = false;
+  wrapper.style.transition = 'transform 0.2s ease-in-out';
+});
 
-lightbox.addEventListener('touchmove', (e) => {
-    if (!isDragging) return;
-    const x = e.touches[0].pageX - lightbox.offsetLeft;
-    const y = e.touches[0].pageY - lightbox.offsetTop;
-    lightbox.scrollLeft = scrollLeft - (x - startX) * 1.5;
-    lightbox.scrollTop = scrollTop - (y - startY) * 1.5;
+window.addEventListener('touchmove', (e) => {
+  if (!isDragging) return;
+  panX = startPanX + (e.touches[0].pageX - startX);
+  panY = startPanY + (e.touches[0].pageY - startY);
+  clampPan();
+  applyTransform();
 }, { passive: true });
 
-// 4. 시스템 가동 및 초기화
+// 시스템 가동 및 초기화
 initGallery();
 </script>
+</body>
+</html>

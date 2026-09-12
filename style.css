@@ -3,7 +3,7 @@ body {
   margin: 0 !important;
   padding: 50px 20px !important;
   background-color: #ffffff !important;
-  font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+  font-family: Inter, BlinkMacSystemFont, sans-serif;
 }
 
 /* 첫 화면 사진 목록 바둑판 정렬 (기본값 — index.html 내부 <style>에서 3열 고정으로 덮어씀) */

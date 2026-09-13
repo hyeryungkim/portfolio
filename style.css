@@ -44,7 +44,7 @@ body {
   }
   .gallery {
     grid-template-columns: 1fr !important;
-    gap: 60px !important; /* 사진 사이 여백 넓게 */
+    gap: 150px !important; /* 사진 사이 여백 넓게 */
   }
   .gallery-item {
     width: 100% !important;

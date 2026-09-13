@@ -28,14 +28,17 @@ html, body {
 .gallery {
   display: grid !important;
   grid-template-columns: repeat(3, 1fr) !important;
-  gap: 50px !important;
+  row-gap: 130px !important;      /* 👈 세로 간격 (숫자 키우면 더 넓어짐) */
+  column-gap: 50px !important;   /* 가로 간격은 기존 유지 */
   max-width: 900px !important;
   margin: 0 auto !important;
   padding: 20px 0 !important;
 }
 @media (max-width: 768px) {
-  .gallery { grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)) !important; }
-}
+  .gallery {
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)) !important;
+    row-gap: 150px !important;
+  }
 /* 개별 사진+텍스트 카드 세트 */
 .gallery-container {
   display: none;

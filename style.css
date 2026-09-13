@@ -4,9 +4,10 @@ body {
   padding: 50px 20px !important;
   background-color: #ffffff !important;
   font-family: Inter, BlinkMacSystemFont, sans-serif;
+  color: #4a4949 !important;
 }
 
-/* 첫 화면 사진 목록 바둑판 정렬 (기본값 — index.html 내부 <style>에서 3열 고정으로 덮어씀) */
+/* 첫 화면 사진 목록 바둑판 정렬 */
 .gallery {
   display: grid !important;
   grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)) !important;
@@ -15,7 +16,7 @@ body {
   margin: 0 auto !important;
 }
 
-/* 개별 사진 카드 스타일 (기본값 — index.html 내부 <style>에서 덮어씀) */
+/* 개별 사진 카드 스타일 */
 .gallery-item {
   cursor: pointer !important;
   width: 250px !important;
@@ -34,4 +35,20 @@ body {
   height: 100% !important;
   object-fit: cover !important;
   display: block !important;
+}
+
+/* 모바일 화면 (캡처하신 사진 정도의 간격) */
+@media (max-width: 600px) {
+  body {
+    padding: 30px 16px !important;
+  }
+  .gallery {
+    grid-template-columns: 1fr !important;
+    gap: 60px !important; /* 사진 사이 여백 넓게 */
+  }
+  .gallery-item {
+    width: 100% !important;
+    height: auto !important;
+    aspect-ratio: 1 / 1;
+  }
 }
